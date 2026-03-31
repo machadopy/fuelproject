@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+<title>{% block title %}FuelRequests{% endblock title %}</title>
+
+
+{% block main %}
+
+<div class="fuelr-container">
+    <div class="fuelr-div">
+        <h1 class="fuelr-title">Solicitar Combustivel</h1>
+        <hr class="fuelr-line"></hr>
+        <div class="fuelr-insidecontainer">
+            <div class="lateral-form">
+                <p class="fuelr-sidetext">Ola {{ nome }}, para solicitar preencha:</p>
+                {% load static %}<im src="{% static 'img/carro-e-bomba.png' %}" alt="carro-e-bomba-de-combustivel">
+            </div>
+            <form method="post" action="." class="fuelr-tag">
+                {% csrf_token %}
+                <div class="fuelr-form">{{ form.as_p}}</div>
+                <button type="submit" class="fuelr-button">Solicitar</button>
+        </div>
+    
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

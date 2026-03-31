@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+<title>{% block title %}Usuario{% endblock title %}</title>
+
+{% block main %}
+{% include 'partials/_searchbar.html' %}  
+    <section class="historic-content-container">
+        <div class="historic-content historic-list">
+            {% for item in solicitacoes %}
+                <a href="{% url 'detalhes_reembolsos' item.id %}" class="historic-links">
+                    <div class="historic-item">
+                    
+                        <span class="info-group">
+                            <p class="historic-label">Data</p>
+                            <div class="historic-varitem">{{ item.data_solicitacao|date:"d/m/Y"}}</div>
+                        </span>
+                        <span class="info-group">
+                            <p class="historic-label">Placa</p>
+                            <div class="historic-varitem">{{item.veiculo.placa}}</div>
+                        </span class="info-group">
+                        <span class="info-group">
+                            <p class="historic-label">Distancia</p>
+                            <div class="historic-varitem">{{item.distancia_percorrida}}</div>
+                        </span class="info-group">
+                        <span class="info-group">
+                    
+                            <p class="historic-label">STATUS</p>
+                            <div class="historic-varitem">{{ item.get_status_display }}</div>
+                        </span>
+
+                    </div>
+                </a>        
+            {% endfor %}
+        </div>
+        <div class="container-linkreembolsos">
+            <a href="/reembolsos/" class="linkreembolsos">Todas Solicitacoes</a>
+        </div>
+        <div class="container-linkreembolsos">
+            <a href="/fuelrequests/" class="linkreembolsos">Nova Solicitacao</a>
+        </div>
+    </section>
+
+</body>
+
+<br><br><br><br><br>
+Motorista
+Veiculo
+Solicitacoes
+
+{% endblock %}
+
+</html>
+
+

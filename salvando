@@ -1,0 +1,7 @@
+
+
+class Formlogin():
+    class Meta:
+        verbose_name = 'Formlogin'
+        plural_name = 'Formslogin'
+

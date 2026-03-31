@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+<title>{% block title %}Reembolsos{% endblock title %}</title>
+
+{% block main %}
+{% include 'partials/_searchbar.html' %}  
+
+
+<h1>Solicitações de Combustivel</h1>
+
+<table border="2">
+    <tr>
+        <th>Usuario</th>
+        <th>Data de Solicitação</th>
+        <th>Veiculo</th>
+        <th>Placa</th>
+        <th>KM Inicial</th>
+        <th>KM Final</th>
+        <th>Status do Pedido</th>
+    </tr>
+    {% for item in solicitacoes %}
+    <tr>
+        <td>{{item.usuario.username}}</td>
+        <td>{{item.data_solicitacao}}</td>
+        <td>{{item.veiculo.modelo}}</td>
+        <td>{{item.veiculo.placa}}</td>
+        <td>{{item.km_inicial}}</td>
+        <td>{{item.km_final}}</td>
+        <td>{{ item.get_status_display }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}
+    <ul>
+        <ol>
+    
+        </ol>
+    </ul>

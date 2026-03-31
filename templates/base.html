@@ -1,0 +1,27 @@
+{% include 'partials/_head.html/' %}
+<title>{% block title %}{% endblock title %}</title>
+<body>
+{% include 'partials/_header.html' %}
+
+
+    <main>
+        {% block main %}{% endblock %}
+
+    </main>
+
+<footer class="footer">
+    <div class="footer-content">
+
+            <a href="https://github.com/machadopy"><i>machadopy</i><i class="fab fa-github"></i></a>
+            <a href="https://github.com/machadopy"><p class="status"> Disponível para projetos</p></a>
+        </div>
+    </div>
+</footer>
+
+<style>
+    
+</style>
+
+
+</body>
+</html>
