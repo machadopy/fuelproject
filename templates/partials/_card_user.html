@@ -1,0 +1,10 @@
+<div class="card-user-container">
+    <h2>Usuários</h2>
+    {% for user in card_user %}
+        <div class="card-user">
+            <p><strong>{{ user.name }}</strong></p>
+        </div>
+    {% empty %}
+        <p>Nenhum usuário encontrado.</p>
+    {% endfor %}
+</div>
