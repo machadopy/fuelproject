@@ -128,14 +128,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'), # ESSA LINHA É A MAIS IMPORTANTE
+    os.path.join(BASE_DIR, 'templates/static/'),
+
     os.path.join(BASE_DIR, 'templates/static/'),
 
     os.path.join(BASE_DIR, 'usuarios/templates/static/'),
     os.path.join(BASE_DIR, 'fuelrequests/templates/static/'),
     os.path.join(BASE_DIR, 'reembolsos/templates/static/'),
-    os.path.join(BASE_DIR, 'veiculos/templates/static/'),  
+    os.path.join(BASE_DIR, 'veiculos/templates/static/'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Use a separate directory for collected static files so source static files are not mixed with output.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

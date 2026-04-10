@@ -5,9 +5,9 @@
     --color-bg-dark: #2E3330;
     --color-accent: #40A269;
     --color-light-bg:#f8f9fa; 
-    --color-ligth-grey: #afafaf;;
+    --color-ligth-grey: #afafaf;
 
-    --color-white: #ffff;
+    --color-white: #ffffff;
 
     --font-primary: sans-serif;
     --font-headings: 'Roboto Slab', serif;
@@ -16,13 +16,14 @@
     --spacing-grutter-medium: 2.5rem;
 }
 a{
-    text-decoration: none;
-}
-a:visited{
     color: inherit;
     text-decoration: none;
-}
 
+}
+a:visited{
+    color: white;
+    text-decoration: none;
+}
 
 *{
     padding: 0;
@@ -48,6 +49,7 @@ body{
     width: 100%;
     display: flex;
     justify-content: center;
+    color: white;
 }
 
 .container {
@@ -77,6 +79,7 @@ body{
 }
 .main-logo .main-logo-icon{
     margin-right: 1rem !important;
+    color: white;
 }
 .main-text{
     font-family: var(--font-headings);
@@ -90,7 +93,11 @@ body{
     align-items: center;
     gap: 2rem; 
     list-style: none;
+    color: white;
 
+}
+li{
+    color: white;
 }
 .nav-item{
 
@@ -105,6 +112,7 @@ body{
     text-decoration: none;
 
 }
+
 
 .navlink-entrar{
     background-color: var(--color-light-bg);
@@ -356,7 +364,6 @@ h1,h2,h3,h4{
     flex-direction: row;
 
     text-decoration: none;
-    color: var(--color-white);
 }
 footer{
     background-color: var(--color-bg-dark);

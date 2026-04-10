@@ -3,25 +3,41 @@
 
 {% block main %}
 {% include 'partials/_searchbar.html' %}  
-<div>{% for user in card_usuarios %}</div>
-    <h1>{{user.username}}</h1>
-{%endfor%}
-<div class="card-perfil">
-        <h2>Bem-vindo, {{ usuario_logado.username }}!</h2>
-        
-        <p>E-mail: {{ usuario_logado.email }}</p>
-        <p>Data de cadastro: {{ usuario_logado.date_joined|date:"d/m/Y" }}</p>
-        
-        {% if usuario_logado.is_superuser %}
-            <span style="color: red;">Acesso: Administrador</span>
-        {% else %}
-            <span style="color: blue;">Acesso: Motorista</span>
-        {% endif %}
-    </div>
+    <section class="historic-content-container">
+        <div class="historic-content historic-list">
+            {% for item in solicitacoes %}
+                <a href="{% url 'detalhes_reembolsos' item.id %}" class="historic-links">
+                    <div class="historic-item">
+                    
+                        <span class="info-group">
+                            <p class="historic-label">Data</p>
+                            <div class="historic-varitem">{{ item.data_solicitacao|date:"d/m/Y"}}</div>
+                        </span>
+                        <span class="info-group">
+                            <p class="historic-label">Placa</p>
+                            <div class="historic-varitem">{{item.veiculo.placa}}</div>
+                        </span class="info-group">
+                        <span class="info-group">
+                            <p class="historic-label">Distancia</p>
+                            <div class="historic-varitem">{{item.distancia_percorrida}}</div>
+                        </span class="info-group">
+                        <span class="info-group">
+                    
+                            <p class="historic-label">STATUS</p>
+                            <div class="historic-varitem">{{ item.get_status_display }}</div>
+                        </span>
 
-{% include 'partials/_solicitacoesgrid' %}
-
-
+                    </div>
+                </a>        
+            {% endfor %}
+        </div>
+        <div class="container-linkreembolsos">
+            <a href="/reembolsos/" class="linkreembolsos">Todas Solicitacoes</a>
+        </div>
+        <div class="container-linkreembolsos">
+            <a href="/fuelrequests/" class="linkreembolsos">Nova Solicitacao</a>
+        </div>
+    </section>
 
 </body>
 
