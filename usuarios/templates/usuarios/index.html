@@ -4,7 +4,7 @@
 {% block main %}
 {% include 'partials/_searchbar.html' %}  
     <section class="historic-content-container">
-        <div class="historic-content historic-list">
+        <div class="historic-content">
             {% for item in solicitacoes %}
                 <a href="{% url 'detalhes_reembolsos' item.id %}" class="historic-links">
                     <div class="historic-item">
@@ -22,7 +22,6 @@
                             <div class="historic-varitem">{{item.distancia_percorrida}}</div>
                         </span class="info-group">
                         <span class="info-group">
-                    
                             <p class="historic-label">STATUS</p>
                             <div class="historic-varitem">{{ item.get_status_display }}</div>
                         </span>

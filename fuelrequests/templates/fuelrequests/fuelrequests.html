@@ -13,7 +13,6 @@
         <div class="fuelr-insidecontainer">
             <div class="lateral-form">
                 <p class="fuelr-sidetext">Ola {{ nome }}, para solicitar preencha:</p>
-                {% load static %}<img src="{% static 'img/carro-e-bomba.png' %}" alt="carro-e-bomba-de-combustivel">
             </div>
             <form method="post" action="." class="fuelr-tag">
                 {% csrf_token %}
