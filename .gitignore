@@ -1,0 +1,19 @@
+
+.env
+*.env
+.venv/
+node_modules/
+
+# Logs e Cache
+npm-debug.log*
+yarn-error.log*
+.eslintcache
+.cache/
+
+
+.DS_Store
+Thumbs.db
+
+
+dist/
+build/
