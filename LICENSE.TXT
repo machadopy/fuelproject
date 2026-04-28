@@ -1,0 +1,24 @@
+DIREITOS AUTORAIS E LICENÇA DE USO
+
+Copyright (c) 2026 MARCIO VITOR MACHADO
+
+Todos os direitos reservados.
+
+É estritamente proibida a cópia, modificação, distribuição, publicação ou 
+exploração comercial de qualquer parte deste código-fonte, lógica de 
+negócio, design de interface ou conceitos do aplicativo sem a autorização 
+prévia e por escrito do detentor dos direitos autorais acima mencionado.
+
+O uso deste software é restrito apenas para fins de visualização de 
+portfólio (caso o repositório seja público), não conferindo ao usuário 
+qualquer direito de execução, engenharia reversa ou criação de obras 
+derivadas.
+
+Este software e a "ideia" por trás de sua implementação são protegidos 
+pelas leis de Propriedade Intelectual do Brasil e tratados internacionais 
+de direitos autorais (Convenção de Berna). Qualquer violação estará 
+sujeita às penalidades previstas na Lei nº 9.609/98 (Lei do Software) e 
+Lei nº 9.610/98 (Lei de Direitos Autorais).
+
+Para solicitações de licenciamento ou parcerias, entre em contato através 
+de: VITOR.MACHADDO@HOTMAIL.COM
