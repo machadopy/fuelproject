@@ -17,3 +17,19 @@ Thumbs.db
 
 dist/
 build/
+
+# Python cache and virtual env
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.pyre/
+env/
+venv/
+venv/*
+pip-wheel-metadata/
+*.egg-info/
