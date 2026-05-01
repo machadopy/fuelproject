@@ -6,7 +6,7 @@
     <section class="historic-content-container">
         <div class="historic-content">
             {% for item in solicitacoes %}
-                <a href="{% url 'detalhes_reembolsos' item.id %}" class="historic-links">
+                <a href="{% url 'reembolsos:detalhes_reembolsos' item.id %}" class="historic-links">
                     <div class="historic-item">
                     
                         <span class="info-group">

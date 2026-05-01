@@ -39,4 +39,8 @@ def detalhes_reembolsos(request, id):
 
 
     return render(request, 'reembolsos/detalhes_reembolsos.html', context)
+
+
+def search(request):
+    return render(request, 'reembolsos/search.html')
  
