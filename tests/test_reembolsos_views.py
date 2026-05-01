@@ -19,5 +19,9 @@ class ReembolsosViewsTest(TestCase):
         self.assertIs(resolved.func, views.search)
 
     def test_reembolsos_search_retuns_a_right_template(self):
-        response = self.client.get(reverse('reembolsos:search'))
+        response = self.client.get(reverse('reembolsos:search')+'?q=teste')
         self.assertTemplateUsed(response, 'reembolsos/search.html')
+
+    def test_search_bar_returns_404_if_no_terms_write(self):
+        response = self.client.get(reverse('reembolsos:search'))
+        self.assertEqual(response.status_code, 404)
