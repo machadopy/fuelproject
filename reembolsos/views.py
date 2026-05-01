@@ -49,7 +49,26 @@ def search(request):
 
     if not search_term:
         raise Http404()
+    
+    reembolsos_list = Fuelrequests.objects.filter(
+        status__icontains = search_term
+    ).order_by('-data_solicitacao')
 
     return render(request, 'reembolsos/search.html',{
         'page_title': f'Pesquisa:"{search_term}',
+        'solicitacoes': reembolsos_list,
     })
+
+
+
+
+'''STATUS_CHOICES = [
+        ('P', 'PENDENTE'),
+        ('A', 'APROVADO'),
+        ('N', 'NAO APROVADO'),
+    ]
+
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    veiculo = models.ForeignKey(Veiculo, on_delete=models.PROTECT)
+    data_solicitacao = models.DateField(auto_now_add=True)
+    '''

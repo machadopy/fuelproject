@@ -25,3 +25,11 @@ class ReembolsosViewsTest(TestCase):
     def test_search_bar_returns_404_if_no_terms_write(self):
         response = self.client.get(reverse('reembolsos:search'))
         self.assertEqual(response.status_code, 404)
+
+    def test_search_term_is_on_page_and_scaped(self):
+        url = reverse('reembolsos:search') + '?q=<teste>'
+        response = self.client.get(url)
+        self.assertIn(
+            'Pesquisa:&quot;&lt;teste&gt;',
+            response.content.decode('utf-8'))
+            
