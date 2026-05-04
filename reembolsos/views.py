@@ -13,7 +13,7 @@ def reembolsos(request):
 
         #solicitacoes = Fuelrequests.objects.all() ordenacao apenas p teste
         solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')
-        paginator = Paginator(solicitacoes, 9)
+        paginator = Paginator(solicitacoes, 18)
 
         page_number = request.GET.get('page')
         page_solicitacoes = paginator.get_page(page_number)

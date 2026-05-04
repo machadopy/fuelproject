@@ -25,23 +25,24 @@
             {% endfor %}
     </section>
 
-                <div class="pagination">
+            <div class="pagination">
                 <span class="step-links">
 
                     {% if page_solicitacoes.has_previous %}
-                        <a href="?page=1">&laquo; Primeira Pagina</a>
-                        <a href="?page={{ page_solicitacoes.previous_page_number }}">Anterior</a>
+                        <a class="pag-buttons" href="?page=1">&laquo; Primeira Pagina</a>
+                        <a class="pag-buttons" href="?page={{ page_solicitacoes.previous_page_number }}">Anterior</a>
                     {% endif %}
 
-
-                    <span class="current">
-                        Page {{ page_solicitacoes.number }} of {{ page_solicitacoes.paginator.num_pages }}
-                    </span>
-
+                    {% if page_solicitacoes.has_previous or page_solicitacoes.has_next %}
+                        <span class="current">
+                            <div class="pag-buttons">Pagina {{ page_solicitacoes.number }} de {{ page_solicitacoes.paginator.num_pages }}</div>
+                        </span>
+                    {% else %}
+                    {% endif %}
 
                     {% if page_solicitacoes.has_next %}
-                        <a href="?page={{ page_solicitacoes.next_page_number }}">next</a>
-                        <a href="?page={{ page_solicitacoes.paginator.num_pages }}">last &raquo;</a>
+                        <a class="pag-buttons" href="?page={{ page_solicitacoes.next_page_number }}">Proxima</a>
+                        <a class="pag-buttons" href="?page={{ page_solicitacoes.paginator.num_pages }}">Ultima&raquo;</a>
                     {% endif %}
                 </span>
             </div>
