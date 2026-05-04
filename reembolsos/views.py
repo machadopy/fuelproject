@@ -53,15 +53,24 @@ def search(request):
     if not search_term:
         raise Http404()
     
+    mapeamento = {
+            'APROVADO': 'A',
+            'PENDENTE': 'P',
+            'NAO APROVADO': 'N',
+            'NÃO APROVADO': 'N',
+            'N APROVADO': 'N'
+        }
+    
+    status_filtrar = mapeamento.get(search_term.upper(), search)
+    
     
     reembolsos_list = Fuelrequests.objects.filter(
-        Q(status__icontains = search_term)|
-        Q(usuario__username__icontains = search_term)
-    ).distinct().order_by('-data_solicitacao')
+        Q(status__icontains = status_filtrar)|
+        Q(usuario__username__icontains = search_term)).distinct().order_by('-data_solicitacao')
 
     return render(request, 'reembolsos/search.html',{
         'page_title': f'Pesquisa:"{search_term}"',
-        'solicitacoes': reembolsos_list,
+        'page_solicitacoes': reembolsos_list,
         'search_term' : search_term
     })
 
