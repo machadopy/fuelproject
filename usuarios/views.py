@@ -2,21 +2,19 @@ from django.shortcuts import redirect, render
 from fuelrequests.models import Fuelrequests
 from fuelrequests.forms import FuelReqForms
 from .models import Usuario
+from django.core.paginator import Paginator
 
 
 # Create your views here.
 def usuarios(request):
         #solicitacoes = Fuelrequests.objects.all() ordenacao somente para teste
-        solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
         card_usuarios = Usuario.objects.all()
 
-        context = {
-                'solicitacoes': solicitacoes,
-                'card_usuarios' : card_usuarios,
-                'usuario_logado': request.user
-        }
+        page_solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
+  
+       
+        return render(request, 'usuarios/index.html', {'page_solicitacoes':page_solicitacoes})
 
-        return render(request, 'usuarios/index.html', context)
 
 
 
