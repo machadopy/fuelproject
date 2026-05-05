@@ -46,10 +46,15 @@ body{
 .main-header-container {
     background-color: var(--color-primary-green);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
     width: 100%;
+
     display: flex;
     justify-content: center;
+    
     color: white;
+
+    height: 8vh;
 }
 
 .container {
@@ -88,12 +93,15 @@ body{
 .navitens{
     display: flex;
     flex-direction: row;
+
     letter-spacing: .1rem;
     font-size: small;
     align-items: center;
+
     gap: 2rem; 
     list-style: none;
     color: white;
+    margin-inline: auto;
 
 }
 li{
@@ -120,6 +128,24 @@ li{
     padding: 10px 20px; 
 
     border-radius: 0.6rem;
+}
+.hamburguer{
+    display: none;
+    border: none;
+    background: none;
+    border-top: 3px solid var(--color-white);
+    cursor: pointer;
+}
+.hamburguer::before,
+.hamburguer::after{
+    content: "";
+    display: block;
+    width: 30px;
+    height: 3px;
+    background: var(--color-white);
+    margin-top: 5px;
+    position: relative;
+    transition: 0.3s;
 }
 
 h1,h2,h3,h4{
@@ -387,7 +413,7 @@ footer{
 /* Responsive adjustments for smaller screens */
 @media (max-width: 1200px) {
     body{
-        background-color: #2ecc71;
+       background-color: #8b949e;
     }
     .historic-content{
         display: grid;
@@ -404,6 +430,56 @@ footer{
 
     .main-logo{
         font-size: 3rem;
+    }
+    .navitens{
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vh;
+        height: calc(100vh - 8vh);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--color-primary-green);
+        clip-path: circle(100px at 90% -15%);
+        transition: 1s ease-in-out;
+
+        pointer-events: none;
+
+        gap: 0;
+        list-style: none;
+        color: white;
+        z-index: 1;
+    }
+    .navitens.active{
+        clip-path: circle(1500px at 90% -15%);
+        pointer-events: all;
+    }
+    .hamburguer.active{
+        border-top-color: transparent;
+    }
+    .hamburguer.active::before{
+        transform: rotate(135deg);
+    }
+    .hamburguer.active::after{
+        transform: rotate(-135deg);
+        top:-7px;
+
+    }
+
+    .hamburguer{
+        display: block;
+        position: relative;
+        z-index: 1
+    }
+
+    .nav-item{
+        width: 100%;
+        text-align: center;
+        padding: 1.2rem 0;
     }
 
     .fuelr-insidecontainer{
@@ -424,5 +500,6 @@ footer{
 
     footer{
         position: fixed;
+        height: 8vh;
     }
 }
