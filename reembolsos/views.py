@@ -47,8 +47,16 @@ def detalhes_reembolsos(request, id):
 
 def search(request):
 
+    if request.user.is_superuser:
+        qs =  Fuelrequests.objects.all()
+
+    else:
+        qs = Fuelrequests.objects.filter(usuario=request.user)
+
+
 
     search_term = request.GET.get('q', '').strip()
+
 
     if not search_term:
         raise Http404()
@@ -64,7 +72,7 @@ def search(request):
     status_filtrar = mapeamento.get(search_term.upper(), search)
     
     
-    reembolsos_list = Fuelrequests.objects.filter(
+    reembolsos_list = qs.filter(
         Q(status__icontains = status_filtrar)|
         Q(usuario__username__icontains = search_term)).distinct().order_by('-data_solicitacao')
 
