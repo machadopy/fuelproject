@@ -4,36 +4,28 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.db.models import Q
 from django.core.paginator import Paginator
+from utils.pagination import make_pagination_function
 
 
 
 def reembolsos(request):
 
+
     if request.user.is_superuser:
-
-        #solicitacoes = Fuelrequests.objects.all() ordenacao apenas p teste
         solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')
-
-        
-
-        page_current = request.GET.get('page', 1)
-        paginator = Paginator(solicitacoes, 12)
-        page_solicitacoes = paginator.get_page(page_current)
-
-       
-        return render(request, 'reembolsos/reembolsos.html', {'page_solicitacoes':page_solicitacoes})
+    
     
     else:
         solicitacoes = Fuelrequests.objects.filter(usuario=request.user)
 
         solicitacoes = solicitacoes.order_by('-data_solicitacao')
-        
-        context = {
-            'solicitacoes' : solicitacoes
-            }
 
-        return render(request, 'reembolsos/reembolsos.html', context)
-    
+    page_solicitacoes, pagination_range = make_pagination_function(request,solicitacoes, 6)
+
+    return render(request, 'reembolsos/reembolsos.html', context={
+            'page_solicitacoes':page_solicitacoes,
+            'pagination_range': pagination_range
+            })
 
 def detalhes_reembolsos(request, id):
 
@@ -50,12 +42,14 @@ def detalhes_reembolsos(request, id):
 def search(request):
 
     if request.user.is_superuser:
-        qs =  Fuelrequests.objects.all()
+        qs =  Fuelrequests.objects.all().order_by('-data_solicitacao')
 
     else:
         qs = Fuelrequests.objects.filter(usuario=request.user)
 
+        qs = qs.order_by('-data_solicitacao')
 
+    
 
     search_term = request.GET.get('q', '').strip()
 
@@ -77,11 +71,16 @@ def search(request):
     reembolsos_list = qs.filter(
         Q(status__icontains = status_filtrar)|
         Q(usuario__username__icontains = search_term)).distinct().order_by('-data_solicitacao')
+    
+    reembolsos_list, pagination_range = make_pagination_function(request,reembolsos_list, 12)
 
     return render(request, 'reembolsos/search.html',{
         'page_title': f'Pesquisa:"{search_term}"',
         'page_solicitacoes': reembolsos_list,
-        'search_term' : search_term
+        'pagination_range':pagination_range,
+        'search_term' : search_term,
+        'auq': f'&q={search_term}'
+        
     })
 
 

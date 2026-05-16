@@ -1,11 +1,16 @@
 from math import ceil
+from django.core.paginator import Paginator
 
 def make_pagination(page_range, page_current, page_qty):
+    
     
     middle_page= ceil(page_qty / 2)
     fp_visual = page_current - middle_page
     lp_visual =  page_current + middle_page
     total_pages = len(page_range)
+
+    if page_qty > total_pages:
+        page_qty = total_pages
 
 
     fp_visual_offset = abs(fp_visual)
@@ -34,3 +39,18 @@ def make_pagination(page_range, page_current, page_qty):
 
     }
 
+def make_pagination_function(request,queryset, per_page, qty_pages=4):
+
+    page_current = request.GET.get('page') or 1
+    page_current = int(page_current)
+
+    paginator = Paginator(queryset, per_page)
+    page_solicitacoes = paginator.get_page(page_current)
+
+    pagination_range = make_pagination(
+        paginator.page_range,
+        page_current,
+        qty_pages,
+        )
+
+    return page_solicitacoes, pagination_range

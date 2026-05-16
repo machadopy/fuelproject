@@ -1,3 +1,25 @@
+{% if page_solicitacoes.has_other_pages %}
 <div class="container pagination">
-    1234
+    <div class="step-links">
+    {% if pagination_range.first_page_oor %}
+        <a href="?page=1{{auq}}" class="pag-buttons">Primeira</a>
+        <span>...</span>
+    {% endif %}
+    
+    {% for page in pagination_range.pagination %}
+        {% if pagination_range.page_current == page %}
+            <a href="?page={{page}}{{auq}}" class="pag-current pag-buttons">{{page}}</a>
+        {% else %}
+            <a href="?page={{page}}{{auq}}" class="pag-buttons">{{page}}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination_range.last_page_oor %}
+        <span>...</span>
+        <a href="?page={{pagination_range.total_pages}}{{auq}}" class="pag-buttons">Ultima</a>
+    {% endif %}
+    </div>
 </div>
+{% endif %}
+
+<!--step-links, pag-buttons
