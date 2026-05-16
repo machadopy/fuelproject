@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from utils.pagination import make_pagination_function
 
-
+PER_PAGES = 12
 
 def reembolsos(request):
 
@@ -20,7 +20,7 @@ def reembolsos(request):
 
         solicitacoes = solicitacoes.order_by('-data_solicitacao')
 
-    page_solicitacoes, pagination_range = make_pagination_function(request,solicitacoes, 6)
+    page_solicitacoes, pagination_range = make_pagination_function(request,solicitacoes, PER_PAGES)
 
     return render(request, 'reembolsos/reembolsos.html', context={
             'page_solicitacoes':page_solicitacoes,
@@ -72,7 +72,7 @@ def search(request):
         Q(status__icontains = status_filtrar)|
         Q(usuario__username__icontains = search_term)).distinct().order_by('-data_solicitacao')
     
-    reembolsos_list, pagination_range = make_pagination_function(request,reembolsos_list, 12)
+    reembolsos_list, pagination_range = make_pagination_function(request,reembolsos_list, PER_PAGES)
 
     return render(request, 'reembolsos/search.html',{
         'page_title': f'Pesquisa:"{search_term}"',
