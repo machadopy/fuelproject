@@ -4,7 +4,7 @@ from . import views
 app_name = 'reembolsos'
 
 urlpatterns = [
-    path('', views.reembolsos),
+    path('', views.reembolsos, name='reembolsos_all'),
     path('search/', views.search, name='search'),
-    path('<int:id>/',views.detalhes_reembolsos, name= 'detalhes_reembolsos'),
+    path('<int:id>/',views.detalhes_reembolsos, name='detalhes_reembolsos'),
 ]
