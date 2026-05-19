@@ -5,8 +5,18 @@
 
 
     <main>
-        {% block main %}{% endblock %}
 
+        {% if messages %}
+            <div class="messages-container center">
+                {% for message in messages %}
+                    <div class="message {{message.tags}}">
+                        {{ message }}
+                    </div>
+                {% endfor %}       
+            </div>
+        {% endif %}
+        {% block main %}{% endblock %}
+        
     </main>
 
 <footer class="footer">

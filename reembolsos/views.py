@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from utils.pagination import make_pagination_function
 
-PER_PAGES = 12
+PER_PAGES = int(12)
 
 def reembolsos(request):
 

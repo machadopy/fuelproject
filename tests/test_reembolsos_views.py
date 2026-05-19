@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from fuelrequests.models import Fuelrequests
 from veiculos.models import Veiculo
 from django.contrib.auth.models import User
+from unittest.mock import patch
 
 User = get_user_model()
 
@@ -166,4 +167,26 @@ class ReembolsosViewsTest(TestCase):
         self.assertIn(solicitacao2, response.context['page_solicitacoes'])
     
     
+    
+    def test_pagination_reembolsos(self):
 
+        self.client.login(username='admin', password='123')
+
+        for i in range(16):
+            kwargs = {
+                'id':f'u{i}',
+                'slug':f'slug_u{i}',
+                'title': f'title_u{i}',
+                }
+            self.make_solicitacao(**kwargs)
+
+        with patch('reembolsos.views.PER_PAGES',new= 6):
+        
+            response = self.client.get(reverse('reembolsos:reembolsos_all'))
+            page_solicitacoes = response.context['page_solicitacoes']
+            paginator = page_solicitacoes.paginator
+
+            self.assertEqual(paginator.num_pages, 3)
+            self.assertEqual(len(paginator.page(1)),6)
+            self.assertEqual(len(paginator.page(2)),6)
+            self.assertEqual(len(paginator.page(3)),4)
