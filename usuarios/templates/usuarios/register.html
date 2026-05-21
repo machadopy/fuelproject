@@ -3,25 +3,33 @@
 
 {% block title %}Registre-se{% endblock %}
 {% block main %}
-    <div class="main-content center">
-        <h1>Registre-se {{request_session}}</h1>
-            <div class="main-content container">
-                <form action="{% url 'usuarios:create' %}" method="POST">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{field.id_for_label}}">{{field.label}}:</label>
-                            {{field}}
-                            
-                            {% if field.help_text %}
-                                <p class="help-text">{{field.help_text}}</p>                              
-                            {% endif %}
+<div class="main-content-container">
+    <h1>Registre-se {{request.session.number}}</h1>
+    <hr class="divisoria">
 
-                            {{field.errors}}
-                        </div>
-                    {% endfor %}
-                    <div class="form-group"><button type="submit">Registrar</button></div>
-                </form>
+    <div class="main-inside-container">
+        <div class="side-text">
+            <h1>Insira seus dados para cadastrar</h1>
+        </div>
+
+        <form action="{% url 'usuarios:create' %}" method="POST" class="register-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label class="label" for="{{field.id_for_label}}">{{field.label}}:</label>
+                    {{field}}
+
+                    {% if field.help_text %}
+                        <p class="help-text">{{field.help_text}}</p>
+                    {% endif %}
+                    <div class="errorlist">{{field.errors}}</div>
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <button type="submit">Registrar</button>
             </div>
+        </form>
     </div>
+</div>
 {% endblock %}

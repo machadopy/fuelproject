@@ -15,12 +15,13 @@ def usuarios(request):
 
 
 def register_view(request):
+        request.session['number'] = request.session.get('number') or 1
+        request.session['number'] +=1 
         
         register_form_data = request.session.get('register_form_data', None)
         form = RegisterForm(register_form_data)
         context={
                'form': form,
-               'request_session': request.session['number']
         }
         return render(request, 'usuarios/register.html', context)
 
@@ -36,7 +37,7 @@ def register_created(request):
         context={
                'form': form,
         }
-        return redirect('usuarios:register')
+        return redirect('usuarios:register') 
 
 
 def disparar_mensagem(request):
