@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-<title>{% block title %}Usuario{% endblock title %}</title>
+<title>{% block title %}Login{% endblock title %}</title>
 
 {% block main %}
+<div class="registrar-link"><a href="{% url 'usuarios:register' %}">registrar</a></div>
 {% include 'partials/_searchbar.html' %}  
 {% include 'partials/_forreembolsos.html' %} 
 {% include 'partials/_container_linkreembolsos.html' %}  

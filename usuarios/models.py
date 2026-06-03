@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Usuario(AbstractUser):
     telefone = models.CharField(max_length=15, blank=False)
-    setor = models.CharField(max_length=45, blank=False)
+    setor = models.CharField(max_length=45, blank=True)
 
     def __str__(self):
         return self.username

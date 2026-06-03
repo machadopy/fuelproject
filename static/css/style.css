@@ -559,8 +559,14 @@ h1,h2,h3,h4{
 .form-group button:hover{
     transform: scale(1.1);
 }
-.errorlist{
-    color: var(--color-alert-dark);
+.fielderror{
+    color: red;
+}
+id_password2_error{
+    color: red;
+}
+.errorlist li{
+    color: var(red);
     text-decoration: none;
 }
 .help-text{
@@ -570,7 +576,6 @@ h1,h2,h3,h4{
     padding-top: 0.5rem;
 }
 .main-inside-container li{
-    color:var(--color-debug-dark);
     list-style: none;
     margin-inline: 2rem;
     padding-top: 0.5rem;
@@ -613,6 +618,9 @@ footer{
         grid-template-columns: auto auto;
         margin-left: 5%;
         margin-right: 5%;
+    }
+    .registrar-link{
+        width: 100%;
     }
 }
 
@@ -691,9 +699,16 @@ footer{
         gap: 2.5rem;
     }
     .main-inside-container{
-        flex-direction: column;
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
     }
     .side-text{
         display: none;
+    }
+    .register-form {
+        width: 100%;
+        flex: none;
+        box-sizing: border-box;
     }
 }

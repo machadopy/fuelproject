@@ -4,14 +4,14 @@
 {% block title %}Registre-se{% endblock %}
 {% block main %}
 <div class="main-content-container">
-    <h1>Registre-se {{request.session.number}}</h1>
+    <h1>Registre-se</h1>
     <hr class="divisoria">
 
     <div class="main-inside-container">
         <div class="side-text">
             <h1>Insira seus dados para cadastrar</h1>
         </div>
-
+        {{ form.non_field_errors }}
         <form action="{% url 'usuarios:create' %}" method="POST" class="register-form">
             {% csrf_token %}
             {% for field in form %}
@@ -22,7 +22,7 @@
                     {% if field.help_text %}
                         <p class="help-text">{{field.help_text}}</p>
                     {% endif %}
-                    <div class="errorlist">{{field.errors}}</div>
+                    <div class="fielderror">{{field.errors}}</div>
                 </div>
             {% endfor %}
 

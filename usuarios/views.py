@@ -20,6 +20,11 @@ def register_view(request):
         
         register_form_data = request.session.get('register_form_data', None)
         form = RegisterForm(register_form_data)
+
+        if register_form_data:
+                form.is_valid()
+                del request.session['register_form_data']
+
         context={
                'form': form,
         }
@@ -34,11 +39,20 @@ def register_created(request):
         request.session['register_form_data'] = POST
         form = RegisterForm(POST)
 
-        context={
-               'form': form,
-        }
-        return redirect('usuarios:register') 
+        if form.is_valid():
+                form.save()
+                if 'register_form_data' in request.session:
+                        del request.session['register_form_data']
 
+                context={
+                'form': form,
+                }
+
+                messages.success(request, "Usuário cadastrado com sucesso!Faça login para continuar.")
+                return redirect('usuarios:user_login') 
+        else:
+                request.session['register_form_data'] = POST
+                return redirect('usuarios:register') 
 
 def disparar_mensagem(request):
 
