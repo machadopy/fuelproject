@@ -1,21 +1,40 @@
-{% extends 'base.html' %}
-<title>{% block title %}Login{% endblock title %}</title>
+{% extends "base.html" %}
 
+
+{% block title %}Login{% endblock %}
 {% block main %}
-<div class="registrar-link"><a href="{% url 'usuarios:register' %}">registrar</a></div>
-{% include 'partials/_searchbar.html' %}  
-{% include 'partials/_forreembolsos.html' %} 
-{% include 'partials/_container_linkreembolsos.html' %}  
+<div class="main-content-container">
+    <h1>Login</h1>
+    {% if request.user.is_authenticated %}
+    <p>
+        Voces esta logado como: "{{request.user.username}}".
+    </p>
+    {% endif %}
+    <hr class="divisoria">
 
-</body>
+    <div class="main-inside-container">
+        <div class="side-text">
+            <h1>Insira seus dados para logar</h1>
+        </div>
+        {{ form.non_field_errors }}
+        <form action="{% url 'usuarios:login_create' %}" method="POST" class="register-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label class="label" for="{{field.id_for_label}}">{{field.label}}:</label>
+                    {{field}}
 
-<br><br><br><br><br>
-Motorista
-Veiculo
-Solicitacoes
+                    {% if field.help_text %}
+                        <p class="help-text">{{field.help_text}}</p>
+                    {% endif %}
+                    <div class="fielderror">{{field.errors}}</div>
+                </div>
+            {% endfor %}
 
+            <div class="form-group">
+                <button type="submit">Entrar</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
-
-</html>
-
-

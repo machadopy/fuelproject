@@ -12,6 +12,7 @@ class UsuariosViewsTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='teste',
+            email='teste@test.com',
             password='123'
         )
         self.superuser = User.objects.create_superuser(
@@ -28,6 +29,7 @@ class UsuariosViewsTest(TestCase):
             except User.DoesNotExist:
                 usuario = User.objects.create_user(
                     username=userdata['username'],
+                    email=f"{userdata['username']}@test.com",
                     password='123'
                 )
         else:

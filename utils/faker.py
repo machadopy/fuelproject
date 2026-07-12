@@ -42,7 +42,7 @@ def gerar_usuarios_com_faker(n=5):
         
         usuario = User.objects.create_user(
             username=username,
-            email=fake.email(),
+            email=fake.unique.email(),
             first_name=nome.split()[0],
             last_name=' '.join(nome.split()[1:]) if len(nome.split()) > 1 else ''
         )

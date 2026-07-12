@@ -1,17 +1,25 @@
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.urls import reverse 
 from fuelrequests.models import Fuelrequests
 from fuelrequests.forms import FuelReqForms
 from .models import Usuario
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def usuarios(request):
         
-        page_solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
-        return render(request, 'usuarios/index.html', {'page_solicitacoes':page_solicitacoes})
+        if request.user.is_superuser:
+                solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
+        else:
+                solicitacoes = Fuelrequests.objects.filter(usuario=request.user)[:9]
+
+
+        return render(request, 'usuarios/index.html', {'page_solicitacoes':solicitacoes})
 
 
 def register_view(request):
@@ -31,7 +39,7 @@ def register_view(request):
         return render(request, 'usuarios/register.html', context)
 
 
-def register_created(request):
+def register_create(request):
         if not request.POST:
                 raise Http404
         
@@ -48,7 +56,7 @@ def register_created(request):
                 'form': form,
                 }
 
-                messages.success(request, "Usuário cadastrado com sucesso!Faça login para continuar.")
+                messages.success(request, "Usuário cadastrado com sucesso! Faça login para continuar.")
                 return redirect('usuarios:user_login') 
         else:
                 request.session['register_form_data'] = POST
@@ -58,6 +66,41 @@ def disparar_mensagem(request):
 
     return redirect(request, 'usuarios:user_page')
 
-def userlogin(request):
-        return render(request, 'usuarios/user_login.html')
 
+def user_login(request):
+        form = LoginForm()
+        return render(request, 'usuarios/user_login.html', {
+                'form': form,
+                'form_action': reverse('usuarios:login_create')
+        })
+
+
+def login_create(request):
+        if not request.POST:
+                raise Http404
+        
+        form = LoginForm(request.POST)
+        login_url = reverse('usuarios:user_login')
+
+
+        if form.is_valid():
+                authenticated_user = authenticate(
+                        username = form.cleaned_data.get('username',''),
+                        password = form.cleaned_data.get('password', ''),
+                        )
+                
+                if authenticated_user is not None:
+                        messages.success(request, 'Login Realizado')
+                        login(request, authenticated_user)
+                else:
+                        messages.error(request, 'Credenciais Inválidas')
+        else:                
+                messages.error(request, 'Erro ao validar campos')
+
+        return redirect(login_url)
+  
+               
+@login_required
+def logout_views(request):
+        logout(request)
+        return redirect(reverse('usuarios:login'))

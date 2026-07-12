@@ -44,7 +44,7 @@ class UserRegisterFormUnitTest(TestCase):
          self.assertTrue(form.is_valid())
 
     @parameterized.expand([
-            ('email',''),
+            ('email','Informe um endereço de email válido.'),
             ('password1','Senha deve ter: No mínimo 8 caracteres, letras maiúsculas, minúsculas e números. A senha e a confirmação devem ser iguais.'),
         ])
     def test_error_messages_and_validations_are_right(self,field,message):
@@ -65,3 +65,24 @@ class UserRegisterFormUnitTest(TestCase):
     
         
         self.assertEqual(current_message, message)
+
+    def test_email_must_be_unique(self):
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+        User.objects.create_user(
+            username='usuario2',
+            email='emailcerto@hotmail.com',
+            password='Suficiente1',
+        )
+
+        form = RegisterForm(data={
+            'username': 'usuario3',
+            'email': 'emailcerto@hotmail.com',
+            'telefone': '85996767696',
+            'password1': 'Suficiente1',
+            'password2': 'Suficiente1',
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
