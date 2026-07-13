@@ -1,7 +1,8 @@
 <div class="search-container">
   <div class="container">
     <form action="{% url 'reembolsos:search' %}" class="search-form">
-      <input type="search" name="q" value="{{search_term}}" class="search-input" required>
+      <input type="search" name="q" value="{{search_term}}" class="search-input" required
+      placeholder = "Pesquise solicitacoes.">
       <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
     </form>
   </div>

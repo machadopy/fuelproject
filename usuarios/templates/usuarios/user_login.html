@@ -5,11 +5,7 @@
 {% block main %}
 <div class="main-content-container">
     <h1>Login</h1>
-    {% if request.user.is_authenticated %}
-    <p>
-        Voces esta logado como: "{{request.user.username}}".
-    </p>
-    {% endif %}
+    
     <hr class="divisoria">
 
     <div class="main-inside-container">
@@ -35,6 +31,18 @@
                 <button type="submit">Entrar</button>
             </div>
         </form>
+        
     </div>
+    {% if request.user.is_authenticated %}
+        <p>
+            Voce esta logado como: "{{request.user.username}}".
+
+    <form action="{% url 'usuarios:logout' %}" method="post" style="display: inline;">
+    {% csrf_token %}
+        <button type="submit" class="btn-logout" style="background: none; border: none; padding: 0; color: blue; cursor: pointer; text-decoration: underline;">
+            Sair
+        </button>
+    </form>
+        {% endif %}
 </div>
 {% endblock %}

@@ -3,6 +3,7 @@
 *.env
 .venv/
 node_modules/
+bin
 
 # Logs e Cache
 npm-debug.log*

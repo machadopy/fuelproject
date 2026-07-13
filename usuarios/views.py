@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
+@login_required(login_url='usuarios:user_login')
 def usuarios(request):
         
         if request.user.is_superuser:
@@ -100,7 +102,17 @@ def login_create(request):
         return redirect(login_url)
   
                
-@login_required
+@login_required(login_url='authors:login', redirect_field_name='next')
 def logout_views(request):
+        if not request.POST:
+                raise Http404
+        
+        if request.POST.get('username') != request.user.username:
+                return redirect(reverse('usuarios:login'))
+
         logout(request)
+        messages.warning(request, "Você saiu da sua conta com sucesso.")
         return redirect(reverse('usuarios:login'))
+
+
+
