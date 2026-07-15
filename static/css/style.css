@@ -140,6 +140,11 @@ main{
 
     height: 8vh;
 }
+.main-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
 .container {
     display: flex;
@@ -147,7 +152,7 @@ main{
     justify-content: space-between;
     align-items: center;
 
-    width: 100%;
+    
 
     max-width: 1400px;
 
@@ -155,7 +160,9 @@ main{
 
     padding: 1rem 2rem;
 }
-
+.logo-fr{
+    max-width: 100px;
+}
 .main-logo{
     font-size: 4rem;
     color: var(--color-white);
@@ -425,15 +432,6 @@ h1,h2,h3,h4{
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
-}
-.login-message-container{
-    margin: 2rem auto 4rem;
-    padding: 1.5rem 2rem;
-    width: fit-content;
-    background-color: var(--color-white);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    text-align: center;
 }
 .linkreembolsos{
 
