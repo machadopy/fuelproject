@@ -5,44 +5,34 @@
 {% block main %}
 <div class="main-content-container">
     <h1>Login</h1>
-    
-    <hr class="divisoria">
+    {% if not user.is_authenticated %}
+        <hr class="divisoria">
 
-    <div class="main-inside-container">
-        <div class="side-text">
-            <h1>Insira seus dados para logar</h1>
-        </div>
-        {{ form.non_field_errors }}
-        <form action="{% url 'usuarios:login_create' %}" method="POST" class="register-form">
-            {% csrf_token %}
-            {% for field in form %}
-                <div class="form-group">
-                    <label class="label" for="{{field.id_for_label}}">{{field.label}}:</label>
-                    {{field}}
-
-                    {% if field.help_text %}
-                        <p class="help-text">{{field.help_text}}</p>
-                    {% endif %}
-                    <div class="fielderror">{{field.errors}}</div>
-                </div>
-            {% endfor %}
-
-            <div class="form-group">
-                <button type="submit">Entrar</button>
+        <div class="main-inside-container">
+            <div class="side-text">
+                <h1>Insira seus dados para logar</h1>
             </div>
-        </form>
-        
-    </div>
-    {% if request.user.is_authenticated %}
-        <p>
-            Voce esta logado como: "{{request.user.username}}".
+            {{ form.non_field_errors }}
+            <form action="{% url 'usuarios:login_create' %}" method="POST" class="register-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label class="label" for="{{field.id_for_label}}">{{field.label}}:</label>
+                        {{field}}
 
-    <form action="{% url 'usuarios:logout' %}" method="post" style="display: inline;">
-    {% csrf_token %}
-        <button type="submit" class="btn-logout" style="background: none; border: none; padding: 0; color: blue; cursor: pointer; text-decoration: underline;">
-            Sair
-        </button>
-    </form>
-        {% endif %}
+                        {% if field.help_text %}
+                            <p class="help-text">{{field.help_text}}</p>
+                        {% endif %}
+                        <div class="fielderror">{{field.errors}}</div>
+                    </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <button type="submit">Entrar</button>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+    {% include 'usuarios/partials/login_messages.html' %}
 </div>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard {{ user }}{% endblock title %}
+
+{% block main %}
+{% include 'partials/_searchbar.html' %}
+<h1 style="text-align: center;">Dashboard {{ user }}</h1>
+
+
+
+{% include 'partials/_forreembolsos.html' %}
+{% include 'usuarios/partials/login_messages.html' %}
+
+{% endblock %}
+
+

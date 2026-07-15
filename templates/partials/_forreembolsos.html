@@ -11,11 +11,11 @@
                         <span class="info-group">
                             <p class="historic-label">Placa</p>
                             <div class="historic-varitem">{{item.veiculo.placa}}</div>
-                        </span class="info-group">
+                        </span>
                         <span class="info-group">
                             <p class="historic-label">Distancia</p>
                             <div class="historic-varitem">{{item.distancia_percorrida}}</div>
-                        </span class="info-group">
+                        </span>
                         <span class="info-group">
                             <p class="historic-label">STATUS</p>
                             <div class="historic-varitem">{{ item.get_status_display }}</div>
@@ -23,6 +23,7 @@
                     </div>
                 </a>        
             {% endfor %}
+        </div>
     </section>
     <section>
         {% include 'partials/_pagination.html' %}

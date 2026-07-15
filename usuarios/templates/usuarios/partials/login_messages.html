@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+    <div class="login-message-container">
+        <p>Voce esta logado como: "{{ user.username }}".</p>
+        <form action="{% url 'usuarios:logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout" style="background: none; border: none; padding: 0; color: blue; cursor: pointer; text-decoration: underline;">
+                Sair
+            </button>
+        </form>
+    </div>
+{% endif %}

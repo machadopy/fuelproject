@@ -24,11 +24,15 @@
                 <li class="nav-item">
                   <a href="/fuelrequests/" class="nav-link">Solicitacoes</a>
                 </li>
-
-                <li class="nav-item">
-                  <a href="/user_login" class="btn btn-outline-light ml-4 navlink-entrar">Entrar</a>
-                </li>
-
+              {% if not user.is_authenticated %}
+                  <li class="nav-item">
+                    <a href="/user_login" class="btn btn-outline-light ml-4 navlink-entrar">Entrar</a>
+                  </li>
+              {% else %}
+                  <li class="nav-item">
+                    <a href="/dashboard" class="btn btn-outline-light ml-4 navlink-entrar"> Perfil </a>
+                  </li>
+              {% endif %}
               </div>
 
                 <button class="hamburguer"></button>

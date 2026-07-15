@@ -21,7 +21,7 @@ def usuarios(request):
                 solicitacoes = Fuelrequests.objects.filter(usuario=request.user)[:9]
 
 
-        return render(request, 'usuarios/index.html', {'page_solicitacoes':solicitacoes})
+        return render(request, 'usuarios/dashboard.html', {'page_solicitacoes':solicitacoes})
 
 
 def register_view(request):
@@ -82,7 +82,7 @@ def login_create(request):
                 raise Http404
         
         form = LoginForm(request.POST)
-        login_url = reverse('usuarios:user_login')
+        login_url = reverse('usuarios:dashboard')
 
 
         if form.is_valid():
@@ -102,7 +102,7 @@ def login_create(request):
         return redirect(login_url)
   
                
-@login_required(login_url='authors:login', redirect_field_name='next')
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def logout_views(request):
         if not request.POST:
                 raise Http404
@@ -115,4 +115,14 @@ def logout_views(request):
         return redirect(reverse('usuarios:login'))
 
 
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
+def dashboard(request):
+        
+        if request.user.is_superuser:
+                solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
+        else:
+                solicitacoes = Fuelrequests.objects.filter(usuario=request.user)[:9]
+
+
+        return render(request, 'usuarios/dashboard.html',{'page_solicitacoes':solicitacoes})
 

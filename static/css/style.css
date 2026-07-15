@@ -426,6 +426,15 @@ h1,h2,h3,h4{
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
 }
+.login-message-container{
+    margin: 2rem auto 4rem;
+    padding: 1.5rem 2rem;
+    width: fit-content;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
 .linkreembolsos{
 
     margin-top: 1rem;

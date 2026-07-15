@@ -68,7 +68,7 @@ class UsuariosViewsTest(TestCase):
 
 
         response = self.client.get(url)
-        self.assertTemplateUsed(response, 'usuarios/index.html')
+        self.assertTemplateUsed(response, 'usuarios/dashboard.html')
 
     
     def test_usuarios_login_template_view_is_correct(self):
