@@ -1,9 +1,12 @@
+from django.contrib import messages
+
 from django.shortcuts import render
 from fuelrequests.models import Fuelrequests
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.db.models import Q
 from django.core.paginator import Paginator
+from reembolsos.forms.reembolsos_form import ReembolsosEditForm
 from utils.pagination import make_pagination_function
 
 PER_PAGES = int(12)
@@ -29,12 +32,16 @@ def reembolsos(request):
 
 def detalhes_reembolsos(request, id):
 
-    solicitacao = get_object_or_404(Fuelrequests, id=id)
+    if request.user.is_superuser:
+        solicitacao = get_object_or_404(Fuelrequests, id=id)
+
+    else:
+        solicitacao = get_object_or_404(Fuelrequests.objects.filter(usuario=request.user), id=id)
 
     context = {
             'solicitacoes' : [solicitacao]
             }
-
+    
 
     return render(request, 'reembolsos/detalhes_reembolsos.html', context)
 
@@ -84,24 +91,33 @@ def search(request):
     })
 
 
+def editar_reembolsos(request, id):
+    
 
+    if request.user.is_superuser:
+        solicitacao = get_object_or_404(Fuelrequests, id=id)
 
-'''STATUS_CHOICES = [
-        ('P', 'PENDENTE'),
-        ('A', 'APROVADO'),
-        ('N', 'NAO APROVADO'),
-    ]
+    else:
+        solicitacao = get_object_or_404(Fuelrequests.objects.filter(
+            usuario=request.user),
+            id=id,
+            )
+        if solicitacao.status in ['A', 'N']:
+            raise Http404("Solicitações aprovadas ou não aprovadas não podem ser editadas.")
 
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    veiculo = models.ForeignKey(Veiculo, on_delete=models.PROTECT)
-    data_solicitacao = models.DateField(auto_now_add=True)
+    form = ReembolsosEditForm(
+    request.POST or None,
+    instance = solicitacao
+    )
 
-
-     context = {
-            'solicitacoes' : solicitacoes
+    context = {
+            'solicitacoes' : [solicitacao],
+            'form' : form
             }
+    if form.is_valid():
+        solicitacao = form.save()
 
-            
+        messages.success(request,'Formulario salvo!')
+        
 
-
-    '''
+    return render(request, 'reembolsos/editar_reembolsos.html', context)
