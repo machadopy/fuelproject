@@ -81,6 +81,47 @@ class ReembolsosViewsTest(TestCase):
 
         self.assertTemplateUsed(response, 'reembolsos/detalhes_reembolsos.html')
 
+    def test_editar_reembolsos_updates_km_values(self):
+        solicitacao = self.make_solicitacao(
+            id=10,
+            slug='edit',
+            title='edit',
+            km_inicial=100,
+            km_final=200,
+        )
+
+        self.client.login(username='teste', password='123')
+
+        url = reverse('reembolsos:editar_reembolsos', args=(solicitacao.id,))
+        response = self.client.post(url, {
+            'km_inicial': 150,
+            'km_final': 250,
+        })
+
+        solicitacao.refresh_from_db()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(solicitacao.km_inicial, 150)
+        self.assertEqual(solicitacao.km_final, 250)
+        self.assertContains(response, 'Formulario salvo!')
+
+    def test_deletar_reembolsos_removes_request(self):
+        solicitacao = self.make_solicitacao(
+            id=11,
+            slug='delete',
+            title='delete',
+            km_inicial=100,
+            km_final=200,
+        )
+
+        self.client.login(username='teste', password='123')
+
+        url = reverse('reembolsos:deletar_reembolsos', args=(solicitacao.id,))
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Fuelrequests.objects.filter(id=solicitacao.id).exists())
+
     def test_reembolsos_search_view_is_correct(self):
 
         url = reverse('reembolsos:search')

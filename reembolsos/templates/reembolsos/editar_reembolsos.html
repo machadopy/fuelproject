@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 <title>{% block title %}Edicao de Solicitacao{% endblock title %}</title>
 
 {% block main %}
@@ -16,6 +18,7 @@
             <form method="post" action="." class="fuelr-tag">
                 {% csrf_token %}
                 <div class="fuelr-form">
+                    {{ form.non_field_errors }}
                     {% for item in solicitacoes %}
                         <p>
                             <label>Usuário:</label>
@@ -34,21 +37,34 @@
                     <hr>
 
                     <p>
-                        <label>KM Inicial:</label>
+                        <label for="{{ form.km_inicial.id_for_label }}">KM Inicial:</label>
                         {{ form.km_inicial }}
                     </p>
+                    <div class="fielderror">{{ form.km_inicial.errors }}</div>
                     <p>
-                        <label>KM Final:</label>
+                        <label for="{{ form.km_final.id_for_label }}">KM Final:</label>
                         {{ form.km_final }}
                     </p>
+                    <div class="fielderror">{{ form.km_final.errors }}</div>
                 </div>
+            
                 <button type="submit" class="fuelr-button">Editar</button>
+                </form>
+                
         </div>
-    
+        <form style="text-align: center;" class="form-delete" action="{% url "reembolsos:deletar_reembolsos" form.instance.id %}"  method= 'POST'>
+
+                {% csrf_token %}
+                <button type="submit">Deletar</button>
+
         </form>
+            
+    
+
+
     </div>
 </div>
-
+<script src="{% static 'js/delete_script.js' %}"></script>
 
 
 

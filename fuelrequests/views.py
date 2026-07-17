@@ -1,9 +1,13 @@
+from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from fuelrequests.forms import FuelReqForms
 from fuelrequests.models import Fuelrequests
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
+
 def fuelrequests(request):
 # Create your views here.
     if request.method == 'GET':
@@ -25,7 +29,8 @@ def fuelrequests(request):
         
         if form.is_valid():
             form.save()
-            return redirect('/')
+            messages.success(request, 'Solicitação de combustível criada com sucesso.')
+            return redirect('usuarios:dashboard')
         
         else:
 
@@ -35,5 +40,7 @@ def fuelrequests(request):
                 'solicitacao' : solicitacao,
                 'form' : form
                 }
+
+            messages.error(request, 'Não foi possível criar a solicitação. Verifique os campos do formulário.')
 
             return render(request, 'fuelrequests/fuelrequests.html', context)

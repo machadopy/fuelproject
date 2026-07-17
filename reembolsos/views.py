@@ -1,6 +1,7 @@
 from django.contrib import messages
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from fuelrequests.models import Fuelrequests
 from django.shortcuts import get_object_or_404
 from django.http import Http404
@@ -8,8 +9,12 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from reembolsos.forms.reembolsos_form import ReembolsosEditForm
 from utils.pagination import make_pagination_function
+from django.contrib.auth.decorators import login_required
+
 
 PER_PAGES = int(12)
+
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 
 def reembolsos(request):
 
@@ -29,7 +34,7 @@ def reembolsos(request):
             'page_solicitacoes':page_solicitacoes,
             'pagination_range': pagination_range
             })
-
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def detalhes_reembolsos(request, id):
 
     if request.user.is_superuser:
@@ -45,7 +50,7 @@ def detalhes_reembolsos(request, id):
 
     return render(request, 'reembolsos/detalhes_reembolsos.html', context)
 
-
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def search(request):
 
     if request.user.is_superuser:
@@ -90,7 +95,7 @@ def search(request):
         
     })
 
-
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def editar_reembolsos(request, id):
     
 
@@ -106,7 +111,8 @@ def editar_reembolsos(request, id):
             raise Http404("Solicitações aprovadas ou não aprovadas não podem ser editadas.")
 
     form = ReembolsosEditForm(
-    request.POST or None,
+    data=request.POST or None,
+    files=request.FILES or None,
     instance = solicitacao
     )
 
@@ -121,3 +127,25 @@ def editar_reembolsos(request, id):
         
 
     return render(request, 'reembolsos/editar_reembolsos.html', context)
+
+
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
+def deletar_reembolsos(request, id):
+    if request.method != 'POST':
+        raise Http404()
+
+    if request.user.is_superuser:
+        solicitacao = get_object_or_404(Fuelrequests, id=id)
+
+    else:
+        solicitacao = get_object_or_404(Fuelrequests.objects.filter(
+            usuario=request.user),
+            id=id,
+            )
+        if solicitacao.status in ['A', 'N']:
+            raise Http404("Solicitações aprovadas ou não aprovadas não podem ser deletadas.")
+
+    solicitacao.delete()
+    messages.success(request, 'Solicitação deletada com sucesso.')
+
+    return redirect(reverse('usuarios:dashboard'))

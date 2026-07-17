@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@login_required(login_url='usuarios:user_login')
+@login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def usuarios(request):
         
         if request.user.is_superuser:

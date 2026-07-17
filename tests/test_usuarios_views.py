@@ -80,3 +80,27 @@ class UsuariosViewsTest(TestCase):
 
         response = self.client.get(url)
         self.assertTemplateUsed(response, 'usuarios/user_login.html')
+
+    def test_fuelrequest_post_rejects_invalid_km_range(self):
+        self.client.login(username='teste', password='123')
+
+        veiculo = Veiculo.objects.create(
+            placa='TST123',
+            marca='Teste',
+            modelo='Modelo Teste',
+            km=1000,
+        )
+
+        response = self.client.post('/fuelrequests/', {
+            'usuario': self.user.id,
+            'veiculo': veiculo.id,
+            'km_inicial': 200,
+            'km_final': 100,
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            'A quilometragem final deve ser maior do que a quilometragem inicial.'
+        )
+        self.assertFalse(Fuelrequests.objects.filter(veiculo=veiculo, usuario=self.user).exists())

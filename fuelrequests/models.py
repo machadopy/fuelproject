@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from veiculos.models import Veiculo
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -41,6 +42,15 @@ class Fuelrequests(models.Model):
 
     def __str__(self):
         return f'Solicitacao {self.id} - {self.usuario.username}'
+
+    def clean(self):
+        super().clean()
+
+        if self.km_inicial is not None and self.km_final is not None:
+            if self.km_final <= self.km_inicial:
+                raise ValidationError({
+                    'km_final': 'A quilometragem final deve ser maior do que a quilometragem inicial.'
+                })
     
     @property
     def distancia_percorrida(self):
