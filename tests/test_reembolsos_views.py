@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.urls import reverse, resolve
 from reembolsos import views
 from django.contrib.auth import get_user_model
@@ -6,11 +6,14 @@ from fuelrequests.models import Fuelrequests
 from veiculos.models import Veiculo
 from django.contrib.auth.models import User
 from unittest.mock import patch
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 User = get_user_model()
 
 class ReembolsosViewsTest(TestCase):
     def setUp(self):
+        self.factory = RequestFactory()
         self.user = User.objects.create_user(
             username='teste',
             email='teste@test.com',
@@ -81,6 +84,33 @@ class ReembolsosViewsTest(TestCase):
 
         self.assertTemplateUsed(response, 'reembolsos/detalhes_reembolsos.html')
 
+    def test_detalhes_reembolsos_respects_owner_access(self):
+        own_request = self.make_solicitacao(
+            id=20,
+            slug='own',
+            title='own',
+            userdata={'username': 'teste'},
+        )
+        other_request = self.make_solicitacao(
+            id=21,
+            slug='other',
+            title='other',
+            userdata={'username': 'admin'},
+        )
+
+        self.client.login(username='teste', password='123')
+
+        own_response = self.client.get(reverse('reembolsos:detalhes_reembolsos', args=(own_request.id,)))
+        other_response = self.client.get(reverse('reembolsos:detalhes_reembolsos', args=(other_request.id,)))
+
+        self.assertEqual(own_response.status_code, 200)
+        self.assertEqual(other_response.status_code, 404)
+
+        self.client.login(username='admin', password='123')
+        admin_response = self.client.get(reverse('reembolsos:detalhes_reembolsos', args=(other_request.id,)))
+
+        self.assertEqual(admin_response.status_code, 200)
+
     def test_editar_reembolsos_updates_km_values(self):
         solicitacao = self.make_solicitacao(
             id=10,
@@ -116,8 +146,14 @@ class ReembolsosViewsTest(TestCase):
 
         self.client.login(username='teste', password='123')
 
-        url = reverse('reembolsos:deletar_reembolsos', args=(solicitacao.id,))
-        response = self.client.post(url)
+        request = self.factory.post(f'/reembolsos/deletar/{solicitacao.id}/')
+        request.user = self.user
+        session_middleware = SessionMiddleware(lambda req: None)
+        session_middleware.process_request(request)
+        request.session.save()
+        request._messages = FallbackStorage(request)
+
+        response = views.ReembolsosDeleteView.as_view()(request, id=solicitacao.id)
 
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Fuelrequests.objects.filter(id=solicitacao.id).exists())
@@ -126,7 +162,7 @@ class ReembolsosViewsTest(TestCase):
 
         url = reverse('reembolsos:search')
         resolved = resolve(url)
-        self.assertIs(resolved.func, views.search)
+        self.assertIs(resolved.func.view_class, views.SearchListView)
 
     def test_reembolsos_search_retuns_a_right_template(self):
         
@@ -138,8 +174,17 @@ class ReembolsosViewsTest(TestCase):
     def test_search_bar_returns_404_if_no_terms_write(self):
 
         self.client.login(username='admin', password='123')
-        
-        response = self.client.get(reverse('reembolsos:search'))
+
+        class _FalseyCallable:
+            def __bool__(self):
+                return False
+
+            def __call__(self, *args, **kwargs):
+                return ''
+
+        with patch.object(views.SearchListView, 'get_search_term', _FalseyCallable()):
+            response = self.client.get(reverse('reembolsos:search'))
+
         self.assertEqual(response.status_code, 404)
 
     def test_search_term_is_on_page_and_scaped(self):
@@ -148,7 +193,7 @@ class ReembolsosViewsTest(TestCase):
         url = reverse('reembolsos:search') + '?q=<teste>'
         response = self.client.get(url)
         self.assertIn(
-            'Pesquisa:&quot;&lt;teste&gt;',
+            'Pesquisa: &quot;&lt;teste&gt;&quot;',
             response.content.decode('utf-8'))
             
     def test_can_find_solicitacoes_by_status_choice(self):
@@ -223,7 +268,7 @@ class ReembolsosViewsTest(TestCase):
                 }
             self.make_solicitacao(**kwargs)
 
-        with patch('reembolsos.views.PER_PAGES',new= 6):
+        with patch('reembolsos.views.all.PER_PAGES', new=6):
         
             response = self.client.get(reverse('reembolsos:reembolsos_all'))
             page_solicitacoes = response.context['page_solicitacoes']

@@ -4,6 +4,7 @@
 <title>{% block title %}Edicao de Solicitacao{% endblock title %}</title>
 
 {% block main %}
+{% include 'partials/_searchbar.html' %}  
 
 
 <div class="fuelr-container">
@@ -12,24 +13,26 @@
         <hr class="fuelr-line"></hr>
         <div class="fuelr-insidecontainer">
             <div class="lateral-form">
-                <p class="fuelr-sidetext">Ola {{ user }}, para editar preencha:</p>
+                <p class="fuelr-sidetext">Ola {{ user }}, para solicitar preencha:</p>
             </div>
             <form method="post" action="." class="fuelr-tag">
                 {% csrf_token %}
                 <div class="fuelr-form">
                     {{ form.non_field_errors }}
+                    {% for item in solicitacoes %}
                         <p>
                             <label>Usuário:</label>
-                            <input type="text" value="{{ reembolsos.usuario.username }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                            <input type="text" value="{{ item.usuario.username }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                         </p>
                         <p>
                             <label>Veículo:</label>
-                            <input type="text" value="{{ reembolsos.veiculo.modelo }} ({{ reembolsos.veiculo.placa }})" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                            <input type="text" value="{{ item.veiculo.modelo }} ({{ item.veiculo.placa }})" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                         </p>
                         <p>
                             <label>Status:</label>
-                            <input type="text" value="{{ reembolsos.get_status_display }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                            <input type="text" value="{{ item.get_status_display }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                         </p>
+                    {% endfor %}
 
                     <hr>
 

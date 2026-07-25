@@ -22,6 +22,6 @@ class BaseFunctionalTest(StaticLiveServerTestCase):
 class HomePageFunctionalTest(BaseFunctionalTest):
     def test_test(self):
         browser = self.browser
-        browser.get(self.live_server_url)
+        browser.get(f'{self.live_server_url}/usuarios/user_login/')
         h1 = browser.find_element(By.TAG_NAME, 'h1')
         self.assertIn('Login', h1.text)

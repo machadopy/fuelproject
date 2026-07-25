@@ -1,8 +1,10 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from veiculos.models import Veiculo
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -64,3 +66,13 @@ class Fuelrequests(models.Model):
                 return res 
                 
         return 0
+    
+    def get_absolute_url(self):
+        return reverse("reembolsos:detalhes_reembolsos", args={self.id})
+    
+'''    def save(self, *args, **kwargs):
+        if not self.slug:
+            slug = f'{slugify(self.title)}'
+            self.slug = slug
+        
+        return super().save(*args, **kwargs)'''
