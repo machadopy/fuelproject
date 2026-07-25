@@ -1,4 +1,6 @@
 from django.views.generic import DetailView
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 
 from .all import *
 
@@ -22,6 +24,19 @@ class ReembolsosDetail(DetailView):
 
 
 
+class ReembolsosDetailApiv1(ReembolsosDetail):
+    def render_to_response(self, context, **response_kwargs):
+        reembolsos = context['page_solicitacao']
+        reembolsos_dict = model_to_dict(reembolsos)
+        reembolsos_dict['veiculo'] = {
+            'id': reembolsos.veiculo.id,
+            'placa': reembolsos.veiculo.placa,
+            'marca': reembolsos.veiculo.marca,
+            'modelo': reembolsos.veiculo.modelo,
+            'km': reembolsos.veiculo.km,
+        }
 
-
-
+        return JsonResponse(
+            reembolsos_dict,
+            safe=True
+        )
