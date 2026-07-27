@@ -9,6 +9,7 @@ urlpatterns = [
 
     
     path('search/', views.SearchListView.as_view(), name='search'),
+    path('tags/<slug:slug>/', views.TagListView.as_view(), name='tag'),
 
 
     path('<int:pk>/',views.ReembolsosDetail.as_view(), name='detalhes_reembolsos'),
@@ -17,4 +18,7 @@ urlpatterns = [
 
     path('editar/<int:id>/', views.ReembolsoEdit.as_view(), name='editar_reembolsos'),
     path('deletar/<int:id>/', views.ReembolsoEdit.as_view(), name='deletar_reembolsos'),
+
+
+    path('theory/', views.theory, name='theory'),
 ]

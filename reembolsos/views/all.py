@@ -15,6 +15,10 @@ from django.views.generic import ListView
 
 PER_PAGES = int(12)
 
+
+ 
+
+
 class ReembolsosListViewBase(ListView):
     model = Fuelrequests
     paginate_by = None
@@ -23,11 +27,11 @@ class ReembolsosListViewBase(ListView):
     template_name = 'reembolsos/reembolsos.html'
 
     def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
-        if self.request.user.is_superuser:
-            return qs.order_by('-data_solicitacao')
+        qs = super().get_queryset(*args, **kwargs).select_related('usuario', 'veiculo').prefetch_related('tags')
+
+        if not self.request.user.is_superuser:
+            qs = qs.filter(usuario=self.request.user)
         
-        qs = qs.filter(usuario=self.request.user).order_by('-data_solicitacao')
 
         return qs
     
@@ -45,6 +49,33 @@ class ReembolsosListViewBase(ListView):
         })
         
         return context
+
+class TagListView(ReembolsosListViewBase):
+    template_name = 'reembolsos/tags.html'
+    
+    def get_search_term(self):
+        return self.kwargs.get('slug', '').strip()
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not self.get_search_term():
+            raise Http404()
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(tags__slug=self.get_search_term())
+
+        return qs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_term = self.get_search_term()
+
+        context.update({
+            'page_title': f'Pesquisa: "{search_term}"',
+        })
+        return context
+
     
 class SearchListView(ReembolsosListViewBase):
     template_name = 'reembolsos/search.html'
@@ -53,7 +84,7 @@ class SearchListView(ReembolsosListViewBase):
         return self.request.GET.get('q', '').strip()
     
     def dispatch(self, request, *args, **kwargs):
-        if not self.get_search_term:
+        if not self.get_search_term():
             raise Http404()
         return super().dispatch(request, *args, **kwargs)
     
@@ -191,3 +222,17 @@ def deletar_reembolsos(request, id):
     messages.success(request, 'Solicitação deletada com sucesso.')
 
     return redirect(reverse('usuarios:dashboard'))
+
+def theory(request,*args, **kwargs):
+
+    reembolsos = Fuelrequests.objects.all()
+
+    print(reembolsos[0].usuario)
+
+    context={'reembolsos':reembolsos}
+
+    return render(
+        request,
+        'reembolsos/theory.html',
+        context= context
+    )
