@@ -134,12 +134,9 @@ def logout_views(request):
 
 @login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def dashboard(request):
-        
-        if request.user.is_superuser:
-                solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
-        else:
-                solicitacoes = Fuelrequests.objects.filter(usuario=request.user)[:9]
+    if request.user.is_superuser:
+        solicitacoes = Fuelrequests.objects.all().order_by('-data_solicitacao')[:9]
+    else:
+        solicitacoes = Fuelrequests.objects.filter(usuario=request.user).order_by('-data_solicitacao')[:9]
 
-
-        return render(request, 'usuarios/dashboard.html',{'page_solicitacoes':solicitacoes})
-
+    return render(request, 'usuarios/dashboard.html', {'page_solicitacoes': solicitacoes})
