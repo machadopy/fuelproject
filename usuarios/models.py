@@ -8,6 +8,7 @@ class Usuario(AbstractUser):
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=15, blank=False)
     setor = models.CharField(max_length=45, blank=True)
+    bio =models.TextField(default="",blank=True)
 
     def clean_email(self):
         email = (self.email or '').strip().lower()
@@ -25,3 +26,4 @@ class Usuario(AbstractUser):
 
     def __str__(self):
         return self.username
+
