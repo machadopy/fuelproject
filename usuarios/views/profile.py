@@ -1,9 +1,10 @@
 from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
+from .all import LoginRequiredBaseView
 from usuarios.models import Usuario
 from fuelrequests.models import Fuelrequests
 
-class ProfileView(TemplateView):
+class ProfileView(LoginRequiredBaseView, TemplateView):
     template_name = 'usuarios/profile.html'
 
     def get(self, request, *args, **kwargs):

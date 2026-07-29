@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 <title>{% block title %}Detalhes Reembolsos{% endblock title %}</title>
 
 {% block main %}
@@ -7,16 +8,17 @@
 
 <div style="align-items: center; display: flex; flex-direction: column;">
     
-    <h1>Solicitações de Combustivel</h1>
+    <h1>{% translate 'Fuel Requests'%}</h1>
         <div class="fuelr-form">
             {% for item in solicitacoes %}
+                
                 <p>
-                    <label>Usuário:</label>
+                    <label>{% translate 'User'%}:</label>
                     <input type="text" value="{{ item.usuario.username }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                 </p>
 
                 <p>
-                    <label>Veículo:</label>
+                    <label>{% translate 'Vehicle'%}:</label>
                     <input type="text" value="{{ item.veiculo.modelo }} ({{ item.veiculo.placa }})" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                 </p>
 
@@ -26,12 +28,12 @@
                 </p>
 
                 <p>
-                    <label>KM Inicial:</label>
+                    <label>{% translate 'Initial KM'%}:</label>
                     <input type="text" value="{{ item.km_inicial }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                 </p>
 
                 <p>
-                    <label>KM Final:</label>
+                    <label>{% translate 'Final KM'%}:</label>
                     {{ form.km_final }}
                     <input type="text" value="{{ item.km_final }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
                 </p>
@@ -41,18 +43,18 @@
         </div>
         {% if solicitacoes.0.status != 'A' and solicitacoes.0.status != 'N' or request.user.is_superuser %}
 
-            <a style= "max-width: 100px; display:flex; align-items: center; justify-content: center;" class="fuelr-button" href="{% url 'reembolsos:editar_reembolsos' item.id %}"> EDITAR </a>
+            <a style= "max-width: 100px; display:flex; align-items: center; justify-content: center;" class="fuelr-button" href="{% url 'reembolsos:editar_reembolsos' item.id %}"> {% translate 'Edit'%} </a>
 
             <form class="form-delete" action="{% url "reembolsos:deletar_reembolsos" item.id %}"  method= 'POST'>
 
                 {% csrf_token %}
-                <button type="submit">Deletar</button>
+                <button type="submit">{% translate 'Delete'%}</button>
 
             </form>
 
         {% else %}
             <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-top: 10px; text-align: center;">
-                <strong>Solicitação Finalizada:</strong> Este reembolso já foi processado e não pode mais ser alterado.
+                <strong>{% translate 'Request already finished.'%}:</strong> {% translate 'That refound, cannot be edited or deleted.'%}.
             </div>
         {% endif %}
 

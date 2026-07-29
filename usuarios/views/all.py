@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 # Create your views here.
 
 class UsuarioHome(LoginRequiredMixin, ReembolsosListViewBase):
@@ -28,6 +29,12 @@ class UsuarioHome(LoginRequiredMixin, ReembolsosListViewBase):
                 qs = qs.filter(usuario=self.request.user).order_by('-data_solicitacao')[:9]
 
                 return qs
+
+
+
+class LoginRequiredBaseView(LoginRequiredMixin):
+    login_url = 'usuarios:user_login'
+    redirect_field_name = 'next'
 
 @login_required(login_url='usuarios:user_login', redirect_field_name='next')
 def usuarios(request):

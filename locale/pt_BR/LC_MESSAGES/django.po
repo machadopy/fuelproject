@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-28 17:56-0300\n"
+"PO-Revision-Date: 2026-07-28 17:55-0300\n"
+"Last-Translator: Marcio Vitor Machado\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:11
+msgid "Fuel Requests"
+msgstr "Solicitações de Combustível"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:16
+msgid "User"
+msgstr "Usuário"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:21
+msgid "Vehicle"
+msgstr "Veículo"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:31
+msgid "Initial KM"
+msgstr "KM Inicial"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:36
+msgid "Final KM"
+msgstr "KM Final"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:46
+msgid "Edit"
+msgstr "Editar"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:51
+msgid "Delete"
+msgstr "Deletar"
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:57
+msgid "Request already finished."
+msgstr "Solicitação finalizada."
+
+#: .\reembolsos\templates\reembolsos\detalhes_reembolsos.html:57
+msgid "That refound, cannot be edited or deleted."
+msgstr "Este reembolso não pode mais ser editado ou deletado."
