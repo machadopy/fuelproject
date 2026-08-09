@@ -27,7 +27,7 @@ class ReembolsosListViewBase(ListView):
     template_name = 'reembolsos/reembolsos.html'
 
     def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs).select_related('usuario', 'veiculo').prefetch_related('tags')
+        qs = super().get_queryset(*args, **kwargs).select_related('usuario', 'veiculo')
 
         if not self.request.user.is_superuser:
             qs = qs.filter(usuario=self.request.user)
@@ -49,34 +49,6 @@ class ReembolsosListViewBase(ListView):
         })
         
         return context
-
-class TagListView(ReembolsosListViewBase):
-    template_name = 'reembolsos/tags.html'
-    
-    def get_search_term(self):
-        return self.kwargs.get('slug', '').strip()
-    
-    def dispatch(self, request, *args, **kwargs):
-        if not self.get_search_term():
-            raise Http404()
-        return super().dispatch(request, *args, **kwargs)
-    
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
-        qs = qs.filter(tags__slug=self.get_search_term())
-
-        return qs
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_term = self.get_search_term()
-
-        context.update({
-            'page_title': f'Pesquisa: "{search_term}"',
-        })
-        return context
-
-    
 class SearchListView(ReembolsosListViewBase):
     template_name = 'reembolsos/search.html'
     

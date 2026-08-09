@@ -4,7 +4,6 @@ from django.urls import reverse
 from veiculos.models import Veiculo
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
-from tag.models import Tag
 
 
 # Create your models here.
@@ -40,8 +39,6 @@ class Fuelrequests(models.Model):
     )
 
     status = models.CharField(max_length=1, default='P', choices=STATUS_CHOICES)
-
-    tags = models.ManyToManyField(Tag)
 
 
     def __str__(self):

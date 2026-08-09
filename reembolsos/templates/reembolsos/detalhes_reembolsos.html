@@ -57,16 +57,6 @@
                 <strong>{% translate 'Request already finished.'%}:</strong> {% translate 'That refound, cannot be edited or deleted.'%}.
             </div>
         {% endif %}
-
-        <h6>Tags</h6>
-        <h6 style="color: blue;text-decoration: underline;">
-            {% if item.tags.all %}
-                        {% for tag in item.tags.all %}
-                            <a href="{% url 'reembolsos:tag' tag.slug %}">{{tag.name}}</a>, 
-
-                        {% endfor %}
-        {%endif%}
-        </h6>
         {% endfor %}
         
 

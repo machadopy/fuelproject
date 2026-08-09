@@ -9,7 +9,6 @@ urlpatterns = [
 
     
     path('search/', views.SearchListView.as_view(), name='search'),
-    path('tags/<slug:slug>/', views.TagListView.as_view(), name='tag'),
 
 
     path('<int:pk>/',views.ReembolsosDetail.as_view(), name='detalhes_reembolsos'),

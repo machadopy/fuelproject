@@ -42,12 +42,10 @@ class FuelrequestsAdmin(admin.ModelAdmin):
     
     readonly_fields = ('data_solicitacao',)
 
-    filter_horizontal = ('tags',)
-
 
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('usuario', 'veiculo', 'status','tags',)
+            'fields': ('usuario', 'veiculo', 'status',)
         }),
         ('Controle de Quilometragem', {
             'fields': ('km_inicial', 'km_final')
@@ -67,9 +65,5 @@ class FuelrequestsAdmin(admin.ModelAdmin):
     @admin.display(description='Distância Percorrida')
     def get_distancia(self, obj):
         return obj.distancia_percorrida
-
-    @admin.display(description='Tags')
-    def get_tags(self, obj):
-        return ", ".join([tag.name for tag in obj.tags.all()])
 
  

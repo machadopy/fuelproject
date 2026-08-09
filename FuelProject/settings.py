@@ -63,6 +63,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 12
+    }
 
 ROOT_URLCONF = 'FuelProject.urls'
 
@@ -179,9 +183,6 @@ MESSAGE_TAGS = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 12
-    }
+
 from django.utils.translation import gettext_lazy as _
 
