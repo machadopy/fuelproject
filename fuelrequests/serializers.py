@@ -1,0 +1,117 @@
+from rest_framework import serializers
+from tag.models import Tag
+from veiculos.models import Veiculo
+from .models import Fuelrequests
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'slug']
+
+class FuelrequestsSerializer(serializers.Serializer):
+    STATUS_CHOICES = [
+        ('P', 'PENDENTE'),
+        ('A', 'APROVADO'),
+        ('N', 'NAO APROVADO'),
+    ]
+
+    id = serializers.IntegerField(read_only=True)
+    km_inicial = serializers.IntegerField()
+    km_final = serializers.IntegerField()
+    
+    # Substituído ForeignKey por PrimaryKeyRelatedField:
+
+    usuario_name = serializers.StringRelatedField(source='usuario')
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    veiculo_name = serializers.StringRelatedField(source='veiculo')
+    veiculo = serializers.PrimaryKeyRelatedField(queryset=Veiculo.objects.all())    
+    
+    status = serializers.ChoiceField(choices=STATUS_CHOICES, default='P')
+    data_solicitacao = serializers.DateField(read_only=True)
+
+    public = serializers.CharField(source='status')
+    distancia = serializers.SerializerMethodField()
+
+    def get_distancia(self, obj):
+        if isinstance(obj, dict):
+            return None
+        return f'{obj.distancia_percorrida} KM'
+
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),many=True)
+
+    tag_objects = TagSerializer(many=True, source='tags', read_only=True)
+
+    tag_links = serializers.HyperlinkedRelatedField(
+        many=True,
+        source= 'tags',
+        read_only=True,
+        view_name='fuelrequests:fuelreq_api_v2_tag',
+    )
+    def validate(self, attrs):
+        km_inicial = attrs.get('km_inicial')
+        km_final = attrs.get('km_final')
+
+        if km_inicial is not None and km_final is not None:
+            if km_inicial == km_final:
+                raise serializers.ValidationError(
+                    {'km_final': 'km_final não pode ser igual a km_inicial.'}
+                )
+            if km_final < km_inicial:
+                raise serializers.ValidationError(
+                    {'km_final': 'km_final não pode ser menor que km_inicial.'}
+                )
+
+        return attrs
+
+    def validate_km_inicial(self, value):
+        km_inicial = value
+
+        if km_inicial < 0 or km_inicial > 999999:
+            raise serializers.ValidationError('Valor da Kilometragem incorreto!')
+        return value
+    
+    def validate_km_final(self, value):
+            km_final = value
+    
+            if km_final < 0 or km_final > 999999:
+                raise serializers.ValidationError('Valor da Kilometragem incorreto!')
+            return value
+
+    def save(self, **kwargs):
+         return super().save(**kwargs)
+
+    def create(self, validated_data):
+        tags = validated_data.pop('tags', [])
+        reembolso = Fuelrequests.objects.create(**validated_data)
+        if tags:
+            reembolso.tags.set(tags)
+        return reembolso
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if tags is not None:
+            instance.tags.set(tags)
+
+        return instance
+    
+class FuelrequestsSerializerV3(serializers.ModelSerializer):
+    class Meta:
+        model = Fuelrequests
+        fields = [
+            'id',
+            'km_inicial',
+            'km_final',
+            'distancia'
+            ]
+
+    distancia = serializers.SerializerMethodField()
+
+    def get_distancia(self, obj):
+            return f'{obj.distancia_percorrida} KM'
+

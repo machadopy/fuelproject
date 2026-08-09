@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'fuelrequests.apps.FuelrequestsConfig',
     'reembolsos',
     'debug_toolbar',
-    'tag'
+    'tag',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -178,6 +179,9 @@ MESSAGE_TAGS = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.pa',
+    'PAGE_SIZE': 12
+    }
 from django.utils.translation import gettext_lazy as _
 

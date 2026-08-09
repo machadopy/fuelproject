@@ -44,7 +44,7 @@ class UserRegisterFormUnitTest(TestCase):
          self.assertTrue(form.is_valid())
 
     @parameterized.expand([
-            ('email','Informe um endereço de email válido.'),
+            ('email','Insira um endereço de email válido.'),
             ('password1','Senha deve ter: No mínimo 8 caracteres, letras maiúsculas, minúsculas e números. A senha e a confirmação devem ser iguais.'),
         ])
     def test_error_messages_and_validations_are_right(self,field,message):
