@@ -64,8 +64,8 @@ class FuelrequestsSerializer(serializers.Serializer):
          return super().save(**kwargs)
 
     def create(self, validated_data):
-        return super().create(validated_data)
-
+        return Fuelrequests.objects.create(**validated_data, usuario=self.context['request'].user)
+    
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)

@@ -1,9 +1,20 @@
+from rest_framework.routers import SimpleRouter
+
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import include, path
 from . import views
+from .views import UsuarioApiV2ModelV
 
 
 app_name = 'usuarios'
+
+UsuarioApiV2_router = SimpleRouter()
+UsuarioApiV2_router.register(
+    'usuarios/api/v2',
+    views.UsuarioApiV2ModelV,
+    basename='usuarios',
+    )
+
 
 urlpatterns = [
     path('', views.UsuarioHome.as_view(), name='user_page'),
@@ -15,5 +26,8 @@ urlpatterns = [
     path('disparar/', views.disparar_mensagem, name='disparar_mensagem'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/<int:id>/', views.ProfileView.as_view(), name='profile'),
+
+
+    path('',include(UsuarioApiV2_router.urls)),
 
 ]
