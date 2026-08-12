@@ -9,7 +9,7 @@ from ..permissions import IsOwner
 
    
 class ReembolsosApiV2Pagination(PageNumberPagination):
-    page_size = 9
+    page_size = 12
 
 
 class ReembolsosApiv2Viewset(ModelViewSet):
@@ -31,7 +31,7 @@ class ReembolsosApiv2Viewset(ModelViewSet):
             qs = qs.filter(status=status_id)
 
         
-        return qs
+        return qs.order_by('-id')
 
     def get_object(self):
         pk = self.kwargs.get('pk','')

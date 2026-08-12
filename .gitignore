@@ -57,3 +57,6 @@ venv/
 venv/*
 pip-wheel-metadata/
 *.egg-info/
+
+# Mídia de hodômetros
+media/hodometros/
