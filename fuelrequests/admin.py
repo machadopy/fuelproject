@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Fuelrequests
+from django.utils.html import format_html
 
 
 @admin.register(Fuelrequests)
@@ -15,6 +16,7 @@ class FuelrequestsAdmin(admin.ModelAdmin):
         'km_final', 
         'get_distancia', 
         'status',
+        'hodometro_preview',
     ]
     list_display_links = [
         'id',
@@ -32,15 +34,15 @@ class FuelrequestsAdmin(admin.ModelAdmin):
         'km_final', 
         'get_distancia', 
         'status',
+        'hodometro_preview'
     ]
 
     list_editable = ['status']
     
     list_filter = ('status', 'data_solicitacao', 'veiculo', 'usuario')
     
-    search_fields = ('usuario__username', 'veiculo__placa', 'status')
     
-    readonly_fields = ('data_solicitacao',)
+    readonly_fields = ('data_solicitacao','hodometro_preview')
 
 
     fieldsets = (
@@ -52,6 +54,9 @@ class FuelrequestsAdmin(admin.ModelAdmin):
         }),
         ('Datas', {
             'fields': ('data_solicitacao',),
+        }),
+        ('Comprovante', {
+        'fields': ('hodometro','hodometro_preview')
         }),
     )
     list_per_page = 10
@@ -65,5 +70,14 @@ class FuelrequestsAdmin(admin.ModelAdmin):
     @admin.display(description='Distância Percorrida')
     def get_distancia(self, obj):
         return obj.distancia_percorrida
+
+    @admin.display(description='Preview')
+    def hodometro_preview(self, obj):
+        if obj.hodometro:
+            return format_html(
+                '<img src="{}" style="max-height: 80px; max-width: 120px; border-radius: 4px;" />',
+                obj.hodometro.url
+            )
+        return '(sem imagem)'
 
  

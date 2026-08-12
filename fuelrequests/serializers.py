@@ -19,11 +19,14 @@ class FuelrequestsSerializer(serializers.Serializer):
 
     veiculo_name = serializers.StringRelatedField(source='veiculo')
     veiculo = serializers.PrimaryKeyRelatedField(queryset=Veiculo.objects.all())
+    
 
     status = serializers.ChoiceField(choices=STATUS_CHOICES, default='P')
     data_solicitacao = serializers.DateField(read_only=True)
 
     distancia = serializers.SerializerMethodField()
+
+    hodometro = serializers.ImageField(required=False, allow_null=True)
 
     def get_distancia(self, obj):
         if isinstance(obj, dict):
@@ -82,6 +85,7 @@ class FuelrequestsSerializerV3(serializers.ModelSerializer):
             'km_inicial',
             'km_final',
             'distancia',
+            'hodometro',
         ]
 
     distancia = serializers.SerializerMethodField()

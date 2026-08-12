@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from veiculos.models import Veiculo
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 
 
@@ -40,6 +40,13 @@ class Fuelrequests(models.Model):
 
     status = models.CharField(max_length=1, default='P', choices=STATUS_CHOICES)
 
+    hodometro = models.ImageField(
+        upload_to='hodometros/%Y/%m/',
+        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])],
+        verbose_name='Foto do Hodômetro',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f'Solicitacao {self.id} - {self.usuario.username}'
@@ -68,10 +75,3 @@ class Fuelrequests(models.Model):
     
     def get_absolute_url(self):
         return reverse("reembolsos:detalhes_reembolsos", args={self.id})
-    
-'''    def save(self, *args, **kwargs):
-        if not self.slug:
-            slug = f'{slugify(self.title)}'
-            self.slug = slug
-        
-        return super().save(*args, **kwargs)'''

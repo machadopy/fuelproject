@@ -81,9 +81,12 @@ class UsuariosSerializer(serializers.Serializer):
 
 
 class UsuarioSerializerMV(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = Usuario
         fields = [
+            'id',
             'username',
             'email',
             'first_name',
@@ -92,6 +95,8 @@ class UsuarioSerializerMV(serializers.ModelSerializer):
             'setor',
             'password',
         ]
+        password = serializers.CharField(write_only=True)
+
 
     def create(self, validated_data):
         validated_data.pop('password2', None)
