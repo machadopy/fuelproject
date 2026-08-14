@@ -7,9 +7,4 @@ class Migration(migrations.Migration):
         ('fuelrequests', '0007_fuelrequests_tags'),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='fuelrequests',
-            name='tags',
-        ),
-    ]
+    operations = []
