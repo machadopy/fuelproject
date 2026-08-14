@@ -1,38 +1,60 @@
 {% extends "base.html" %}
 
-
 {% block title %}Login{% endblock %}
+
 {% block main %}
 <div class="main-content-container">
-    <h1>Login</h1>
     {% if not user.is_authenticated %}
-        <hr class="divisoria">
-
-        <div class="main-inside-container">
-            <div class="side-text">
-                <h1>Insira seus dados para logar</h1>
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Acesse sua Conta</h1>
+                <p class="subtitle">Insira suas credenciais para continuar</p>
             </div>
-            {{ form.non_field_errors }}
-            <form action="{% url 'usuarios:login_create' %}" method="POST" class="register-form">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group">
-                        <label class="label" for="{{field.id_for_label}}">{{field.label}}:</label>
-                        {{field}}
 
-                        {% if field.help_text %}
-                            <p class="help-text">{{field.help_text}}</p>
-                        {% endif %}
-                        <div class="fielderror">{{field.errors}}</div>
+            <hr class="divisoria">
+
+            <div class="main-inside-container">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
                     </div>
-                {% endfor %}
+                {% endif %}
 
-                <div class="form-group">
-                    <button type="submit">Entrar</button>
+                <form action="{% url 'usuarios:login_create' %}" method="POST" class="register-form">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label class="label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="fielderror">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-group form-actions">
+                        <button type="submit" class="btn-submit">Entrar</button>
+                    </div>
+                    <div class="register-prompt">
+                    <p>Ainda não tem uma conta? <a href="{% url 'usuarios:register' %}" class="register-link">Cadastre-se aqui</a></p>
                 </div>
-            </form>
+                </form>
+
+                
+            </div>
+        </div>
+    {% else %}
+        <div class="authenticated-notice">
+            <h2>Você já está autenticado!</h2>
         </div>
     {% endif %}
+
     {% include 'usuarios/partials/login_messages.html' %}
 </div>
 {% endblock %}

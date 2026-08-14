@@ -126,6 +126,13 @@ body{
 main{
     flex:1;
 }
+.register-prompt{
+    text-align: center;
+}
+.register-prompt a{
+    text-decoration: underline;
+    color: var(--color-accent);
+}
 
 .main-header-container {
     background-color: var(--color-primary-green);
