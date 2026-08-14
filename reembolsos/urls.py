@@ -16,8 +16,9 @@ urlpatterns = [
 
 
     path('editar/<int:id>/', views.ReembolsoEdit.as_view(), name='editar_reembolsos'),
-    path('deletar/<int:id>/', views.ReembolsoEdit.as_view(), name='deletar_reembolsos'),
+    path('deletar/<int:id>/', views.ReembolsosDeleteView.as_view(), name='deletar_reembolsos'),
 
+    
+    path('<int:pk>/comprovante/', views.anexar_comprovante, name='anexar_comprovante'),
 
-    path('theory/', views.theory, name='theory'),
 ]

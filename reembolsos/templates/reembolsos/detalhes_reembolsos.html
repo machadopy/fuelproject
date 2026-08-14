@@ -1,67 +1,102 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-<title>{% block title %}Detalhes Reembolsos{% endblock title %}</title>
+
+{% block title %}{% translate 'Request Details' %}{% endblock title %}
 
 {% block main %}
 
-
-<div style="align-items: center; display: flex; flex-direction: column;">
+<div style="align-items: center; display: flex; flex-direction: column; width: 100%; padding-block: 2rem;">
     
-    <h1>{% translate 'Fuel Requests'%}</h1>
-        <div class="fuelr-form">
-            {% for item in solicitacoes %}
-                
-                <p>
-                    <label>{% translate 'User'%}:</label>
-                    <input type="text" value="{{ item.usuario.username }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
-                </p>
+    <h1 style="margin-bottom: 2rem;">{% translate 'Fuel Requests' %}</h1>
 
-                <p>
-                    <label>{% translate 'Vehicle'%}:</label>
-                    <input type="text" value="{{ item.veiculo.modelo }} ({{ item.veiculo.placa }})" readonly style="background-color: #e9ecef; cursor: not-allowed;">
-                </p>
-
-                <p>
-                    <label>Status:</label>
-                    <input type="text" value="{{ item.get_status_display }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
-                </p>
-
-                <p>
-                    <label>{% translate 'Initial KM'%}:</label>
-                    <input type="text" value="{{ item.km_inicial }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
-                </p>
-
-                <p>
-                    <label>{% translate 'Final KM'%}:</label>
-                    {{ form.km_final }}
-                    <input type="text" value="{{ item.km_final }}" readonly style="background-color: #e9ecef; cursor: not-allowed;">
-                </p>
-                
-
+    {% for item in solicitacoes %}
+        <div class="fuelr-form" style="width: 100%; max-width: 64rem; margin-bottom: 3rem; background-color: var(--color-white); padding: 3rem; border-radius: 0.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
             
-        </div>
-        {% if solicitacoes.0.status != 'A' and solicitacoes.0.status != 'N' or request.user.is_superuser %}
+            <p>
+                <label>{% translate 'User' %}:</label>
+                <input type="text" value="{{ item.usuario.username }}" readonly class="input-readonly">
+            </p>
 
-            <a style= "max-width: 100px; display:flex; align-items: center; justify-content: center;" class="fuelr-button" href="{% url 'reembolsos:editar_reembolsos' item.id %}"> {% translate 'Edit'%} </a>
+            <p>
+                <label>{% translate 'Vehicle' %}:</label>
+                <input type="text" value="{{ item.veiculo.modelo }} ({{ item.veiculo.placa }})" readonly class="input-readonly">
+            </p>
 
-            <form class="form-delete" action="{% url "reembolsos:deletar_reembolsos" item.id %}"  method= 'POST'>
+            <p>
+                <label>Status:</label>
+                <input type="text" value="{{ item.get_status_display }}" readonly class="input-readonly" style="font-weight: bold; color: var(--color-bg-dark);">
+            </p>
 
-                {% csrf_token %}
-                <button type="submit">{% translate 'Delete'%}</button>
+            <p>
+                <label>{% translate 'Initial KM' %}:</label>
+                <input type="text" value="{{ item.km_inicial }}" readonly class="input-readonly">
+            </p>
 
-            </form>
+            <p>
+                <label>{% translate 'Final KM' %}:</label>
+                <input type="text" value="{{ item.km_final|default:'-' }}" readonly class="input-readonly">
+            </p>
 
-        {% else %}
-            <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-top: 10px; text-align: center;">
-                <strong>{% translate 'Request already finished.'%}:</strong> {% translate 'That refound, cannot be edited or deleted.'%}.
+            <p>
+                <label>{% translate 'Distance' %}:</label>
+                <input type="text" value="{{ item.distancia_percorrida }} km" readonly class="input-readonly">
+            </p>
+
+            {% if item.comprovante_fiscal %}
+                <p>
+                    <label>{% translate 'Recibo' %}:</label>
+                    <a href="{{ item.comprovante_fiscal.url }}" target="_blank" style="display: inline-block; margin-top: 0.5rem; color: var(--color-accent); font-weight: bold; text-decoration: underline;">
+                        {% translate 'Ver recibo' %}
+                    </a>
+                </p>
+            {% endif %}
+
+            <!-- ÁREA DE AÇÕES COM BASE NO STATUS -->
+            <div style="margin-top: 3rem; display: flex; gap: 1.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+
+                <!-- 1. BOTÃO DE ANEXAR COMPROVANTE (Apenas status A ou AG) -->
+                {% if item.status == 'A' or item.status == 'AG' %}
+                    {% if request.user == item.usuario or request.user.is_superuser %}
+                        <a class="fuelr-button" 
+                           style="display: flex; align-items: center; justify-content: center; text-decoration: none;" 
+                           href="{% url 'reembolsos:anexar_comprovante' item.id %}">
+                             {% translate 'Anexar Recibo' %}
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+                <!-- 2. BOTÕES DE EDITAR E DELETAR (Apenas status P ou superuser) -->
+                {% if item.status == 'P' or request.user.is_superuser %}
+                    
+                    <a class="fuelr-button" 
+                       style="display: flex; align-items: center; justify-content: center; text-decoration: none;" 
+                       href="{% url 'reembolsos:editar_reembolsos' item.id %}"> 
+                        {% translate 'Edit' %} 
+                    </a>
+
+                    <form class="form-delete" action="{% url 'reembolsos:deletar_reembolsos' item.id %}" method="POST" style="width: 50%;">
+                        {% csrf_token %}
+                        <button type="submit" class="fuelr-button fuelr-button-danger" style="width: 100%;">
+                            {% translate 'Delete' %}
+                        </button>
+                    </form>
+
+                {% elif item.status != 'A' and item.status != 'AG' %}
+                    <!-- MENSAGEM QUANDO O PROCESSO JÁ FOI FINALIZADO / FECHADO -->
+                    <div style="width: 100%; color: var(--color-error-dark); background-color: var(--color-error-light); border: 1px solid var(--color-error-dark); padding: 1.5rem; border-radius: 6px; text-align: center; font-size: 1.4rem;">
+                        <strong>{% translate 'Request Finished' %}:</strong> {% translate 'This request cannot be edited or deleted.' %}
+                    </div>
+                {% endif %}
+
             </div>
-        {% endif %}
-        {% endfor %}
-        
+
+        </div>
+    {% empty %}
+        <p>{% translate 'No requests found.' %}</p>
+    {% endfor %}
 
 </div>
-
 
 <script src="{% static 'js/delete_script.js' %}"></script>
 

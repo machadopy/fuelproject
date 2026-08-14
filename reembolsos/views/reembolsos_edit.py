@@ -78,14 +78,23 @@ class ReembolsoEdit(View):
     
 
 class ReembolsosDeleteView(ReembolsoEdit):
-    def post(self, request, id):
-    
-        reembolsos = self.get_reembolso(id)
 
-        if reembolsos.status in ['A', 'N']:
-                raise Http404("Solicitações aprovadas ou não aprovadas não podem ser deletadas.")
+  def post(self, request, id):
+    reembolsos = self.get_reembolso(id)
 
-        reembolsos.delete()
-        messages.success(request, 'Solicitação deletada com sucesso.')
+    # TRAVA DE SEGURANÇA: Permite deletar APENAS se estiver em 'P' (PENDENTE)
+    # Qualquer outro status ('A', 'AG', 'N', 'C') impede a exclusão
+    if (
+        reembolsos.status != Fuelrequests.StatusChoices.PENDENTE
+        and not request.user.is_superuser
+    ):
+      messages.error(
+          request,
+          'Esta solicitação já foi processada e não pode mais ser excluída.',
+      )
+      return redirect('reembolsos:detalhes_reembolsos', pk=reembolsos.id)
 
-        return redirect('usuarios:dashboard')
+    reembolsos.delete()
+    messages.success(request, 'Solicitação deletada com sucesso.')
+
+    return redirect('usuarios:dashboard')

@@ -1,16 +1,22 @@
 from django.contrib import messages
-
-from django.shortcuts import redirect, render
-from django.urls import reverse
-from fuelrequests.models import Fuelrequests
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-from django.db.models import Q
-from django.core.paginator import Paginator
-from reembolsos.forms.reembolsos_form import ReembolsosEditForm
-from utils.pagination import make_pagination_function
 from django.contrib.auth.decorators import login_required
+
+
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse
+from django.http import Http404
+
+from django.db.models import Q
+from fuelrequests.models import Fuelrequests
+
+from utils.pagination import make_pagination_function
 from django.views.generic import ListView
+
+from django.core.exceptions import PermissionDenied
+
+from fuelrequests.forms import AnexarComprovanteForm
+
+
 
 
 PER_PAGES = int(12)
@@ -208,3 +214,46 @@ def theory(request,*args, **kwargs):
         'reembolsos/theory.html',
         context= context
     )
+
+
+@login_required(login_url='usuarios:user_login')
+def anexar_comprovante(request, pk):
+    solicitacao = get_object_or_404(Fuelrequests, pk=pk)
+
+    # Permissão: apenas o dono ou superusuário
+    if solicitacao.usuario != request.user and not request.user.is_superuser:
+        raise PermissionDenied("Você não tem permissão para alterar esta solicitação.")
+
+    # Validação de Status: Apenas APROVADO ou APROVADO AGUARDANDO COMPROVANTE
+    status_permitidos = [
+        Fuelrequests.StatusChoices.APROVADO,
+        Fuelrequests.StatusChoices.APROVADO_AGUARDANDO
+    ]
+
+    if solicitacao.status not in status_permitidos:
+        messages.error(
+            request, 
+            f"Não é possível anexar comprovante para solicitação com status '{solicitacao.get_status_display()}'."
+        )
+        return redirect('fuelrequests:fuelrequests')
+
+    if request.method == 'POST':
+        form = AnexarComprovanteForm(request.POST, request.FILES, instance=solicitacao)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            # Ao anexar o comprovante, atualiza o status para CONCLUÍDO
+            obj.status = Fuelrequests.StatusChoices.CONCLUIDO
+            obj.save()
+            
+            messages.success(request, f"Comprovante da solicitação #{solicitacao.id} anexado com sucesso!")
+            return redirect('reembolsos:detalhes_reembolsos', pk=solicitacao.id)
+        else:
+            messages.error(request, "Erro ao anexar comprovante. Verifique o arquivo e tente novamente.")
+    else:
+        form = AnexarComprovanteForm(instance=solicitacao)
+
+    context = {
+        'form': form,
+        'solicitacao': solicitacao,
+    }
+    return render(request, 'reembolsos/anexar_comprovante.html', context)

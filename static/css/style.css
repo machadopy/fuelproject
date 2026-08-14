@@ -440,6 +440,23 @@ h1,h2,h3,h4{
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
 }
+/* Botão Perigo / Deletar */
+.fuelr-button-danger {
+    background-color: var(--color-error-dark) !important;
+    color: var(--color-white) !important;
+}
+
+.fuelr-button-danger:hover {
+    background-color: #902222 !important;
+    transform: scale(1.05);
+}
+
+/* Garante que o form de delete fique alinhado com os links */
+.form-delete {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
 .linkreembolsos{
 
     margin-top: 1rem;

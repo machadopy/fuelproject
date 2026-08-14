@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% translate 'Attach Receipt' %}{% endblock title %}
+
+{% block main %}
+<div style="align-items: center; display: flex; flex-direction: column; width: 100%; padding-block: 2rem;">
+
+    <h1 style="margin-bottom: 2rem;">
+        {% translate 'Attach Receipt' %} 
+        {% if solicitacao %}#{{ solicitacao.id }}{% endif %}
+    </h1>
+
+    <div class="fuelr-form" style="width: 100%; max-width: 64rem; background-color: var(--color-white); padding: 3rem; border-radius: 0.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        
+        {% if solicitacao %}
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background-color: var(--color-gray-2); border-radius: 0.6rem;">
+                <p style="margin-bottom: 0.8rem;"><strong>{% translate 'Vehicle' %}:</strong> {{ solicitacao.veiculo.modelo }} ({{ solicitacao.veiculo.placa }})</p>
+                <p style="margin-bottom: 0.8rem;"><strong>{% translate 'Initial KM' %}:</strong> {{ solicitacao.km_inicial }} km</p>
+                <p style="margin-bottom: 0;"><strong>{% translate 'Final KM' %}:</strong> {{ solicitacao.km_final|default:'-' }} km</p>
+            </div>
+
+            <form action="{% url 'reembolsos:anexar_comprovante' solicitacao.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="message message-error" style="margin-bottom: 2rem;">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <p>
+                    <label for="{{ form.comprovante_fiscal.id_for_label }}">{% translate 'Receipt / Invoice' %}:</label>
+                    <input type="file" 
+                           name="{{ form.comprovante_fiscal.name }}" 
+                           id="{{ form.comprovante_fiscal.id_for_label }}" 
+                           accept="image/*,application/pdf"
+                           capture="environment"
+                           required>
+                </p>
+                {% if form.comprovante_fiscal.errors %}
+                    <p class="fielderror">{{ form.comprovante_fiscal.errors.0 }}</p>
+                {% endif %}
+
+                <div style="margin-top: 3rem; display: flex; gap: 1.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                    <button type="submit" class="fuelr-button" style="width: 48%;">
+                        {% translate 'Send Receipt' %}
+                    </button>
+                    <a class="fuelr-button fuelr-button-danger" 
+                       style="width: 48%; display: flex; align-items: center; justify-content: center; text-decoration: none;" 
+                       href="{% url 'reembolsos:detalhes_reembolsos' solicitacao.id %}">
+                        {% translate 'Cancel' %}
+                    </a>
+                </div>
+
+            </form>
+        {% else %}
+            <p>{% translate 'Request not found.' %}</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block content %}
+    {# Fallback caso o base.html use {% block content %} em vez de {% block main %} #}
+{% endblock content %}
