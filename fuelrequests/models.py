@@ -6,6 +6,12 @@ from django.core.validators import FileExtensionValidator, MaxValueValidator, Mi
 from django.core.exceptions import ValidationError
 
 
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+import os
+
 # Create your models here.
 
 class Fuelrequests(models.Model):
@@ -106,3 +112,46 @@ class Fuelrequests(models.Model):
 
     def get_absolute_url(self):
         return reverse("reembolsos:detalhes_reembolsos", args=[self.id])
+
+    def save(self, *args, **kwargs):
+        if self.hodometro and not self.hodometro._committed:
+            self.hodometro = self._compress_image(self.hodometro)
+
+        if self.comprovante_fiscal and not self.comprovante_fiscal._committed:
+            self.comprovante_fiscal = self._compress_image(self.comprovante_fiscal)
+
+        super().save(*args, **kwargs)
+
+    def _compress_image(self, image_field):
+        # Pula PDFs, que não podem ser abertos pelo Pillow
+        ext = os.path.splitext(image_field.name)[1].lower()
+        if ext == '.pdf':
+            return image_field
+
+        try:
+            img = Image.open(image_field)
+        except Exception:
+            # Se não conseguir abrir (arquivo corrompido, etc), mantém original
+            return image_field
+
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+
+        max_size = (1600, 1600)
+        img.thumbnail(max_size, Image.LANCZOS)
+
+        buffer = BytesIO()
+        img.save(buffer, format='JPEG', quality=70, optimize=True)
+        buffer.seek(0)
+
+        base_name = os.path.splitext(os.path.basename(image_field.name))[0]
+
+        return InMemoryUploadedFile(
+            buffer,
+            'ImageField',
+            f"{base_name}.jpg",
+            'image/jpeg',
+            sys.getsizeof(buffer),
+            None
+        )
+    

@@ -14,7 +14,7 @@
             <div class="lateral-form">
                 <p class="fuelr-sidetext">Ola {{ nome }}, para solicitar preencha:</p>
             </div>
-            <form method="post" action="." class="fuelr-tag">
+            <form method="post" action="." class="fuelr-tag" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="fuelr-form">
                     {{ form.non_field_errors }}
