@@ -44,8 +44,12 @@ class ReembolsoEdit(View):
         
         reembolsos = self.get_reembolso(id)
 
-        if reembolsos.status in ['A', 'N']:
-                raise Http404("Solicitações aprovadas ou não aprovadas não podem ser editadas.")
+        if reembolsos.status != Fuelrequests.StatusChoices.PENDENTE:
+            messages.error(
+                request,
+                'Esta solicitação já foi processada e não pode mais ser editada.'
+            )
+            return redirect('reembolsos:detalhes_reembolsos', pk=reembolsos.id)
 
         form = ReembolsosEditForm(instance = reembolsos)
 
@@ -58,8 +62,12 @@ class ReembolsoEdit(View):
     
         reembolsos = self.get_reembolso(id)
 
-        if reembolsos.status in ['A', 'N']:
-                raise Http404("Solicitações aprovadas ou não aprovadas não podem ser editadas.")
+        if reembolsos.status != Fuelrequests.StatusChoices.PENDENTE:
+            messages.error(
+                request,
+                'Esta solicitação já foi processada e não pode mais ser editada.'
+            )
+            return redirect('reembolsos:detalhes_reembolsos', pk=reembolsos.id)
 
         form = ReembolsosEditForm(
             data=request.POST or None,
@@ -82,12 +90,8 @@ class ReembolsosDeleteView(ReembolsoEdit):
   def post(self, request, id):
     reembolsos = self.get_reembolso(id)
 
-    # TRAVA DE SEGURANÇA: Permite deletar APENAS se estiver em 'P' (PENDENTE)
-    # Qualquer outro status ('A', 'AG', 'N', 'C') impede a exclusão
-    if (
-        reembolsos.status != Fuelrequests.StatusChoices.PENDENTE
-        and not request.user.is_superuser
-    ):
+    # Qualquer status fora de PENDENTE trava a exclusão para todos os usuários.
+    if reembolsos.status != Fuelrequests.StatusChoices.PENDENTE:
       messages.error(
           request,
           'Esta solicitação já foi processada e não pode mais ser excluída.',

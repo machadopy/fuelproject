@@ -1,31 +1,11 @@
-
+# Arquivos de ambiente e logs
 .env
 *.env
 .venv/
-node_modules/
-bin
-
-# Logs e Cache
-npm-debug.log*
-yarn-error.log*
-.eslintcache
-.cache/
-
-
-.DS_Store
-Thumbs.db
-
-
-dist/
-build/
-
-__pycache__/
-*.py[cod]
-*$py.class
-
-.env
-*.env
-.venv/
+env/
+venv/
+venv/*
+bin/
 node_modules/
 
 # Logs e Cache
@@ -33,16 +13,14 @@ npm-debug.log*
 yarn-error.log*
 .eslintcache
 .cache/
-
-
 .DS_Store
 Thumbs.db
 
-
+# Builds e Dist
 dist/
 build/
 
-# Python cache and virtual env
+# Python / Pytest cache
 __pycache__/
 *.py[cod]
 *.pyc
@@ -52,11 +30,10 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .pyre/
-env/
-venv/
-venv/*
 pip-wheel-metadata/
 *.egg-info/
 
-# Mídia de hodômetros
-media/hodometros/
+# Mídia e Uploads (Hodômetros, Comprovantes, etc.)
+media/
+media/*
+!media/.gitkeep

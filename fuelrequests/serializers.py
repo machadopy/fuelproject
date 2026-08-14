@@ -22,7 +22,7 @@ class FuelrequestsSerializer(serializers.Serializer):
     
 
     status = serializers.ChoiceField(choices=STATUS_CHOICES, default='P')
-    data_solicitacao = serializers.DateField(read_only=True)
+    data_solicitacao = serializers.DateTimeField(read_only=True)
 
     distancia = serializers.SerializerMethodField()
 
@@ -78,6 +78,7 @@ class FuelrequestsSerializer(serializers.Serializer):
 
 
 class FuelrequestsSerializerV3(serializers.ModelSerializer):
+    data_solicitacao = serializers.DateTimeField(read_only=True)
     class Meta:
         model = Fuelrequests
         fields = [

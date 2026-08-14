@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'fuelrequests.apps.FuelrequestsConfig',
     'reembolsos',
     'debug_toolbar',
-    'tag',
     'rest_framework',
     'rest_framework_simplejwt',
 ]

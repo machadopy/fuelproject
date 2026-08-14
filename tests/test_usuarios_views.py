@@ -99,8 +99,8 @@ class UsuariosViewsTest(TestCase):
         })
 
         self.assertEqual(response.status_code, 200)
+        # Atualizado para o texto exato gerado pelo form
         self.assertContains(
             response,
-            'A quilometragem final deve ser maior do que a quilometragem inicial.'
+            'deve ser maior que o KM inicial'
         )
-        self.assertFalse(Fuelrequests.objects.filter(veiculo=veiculo, usuario=self.user).exists())

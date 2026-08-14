@@ -187,14 +187,18 @@ def deletar_reembolsos(request, id):
 
     if request.user.is_superuser:
         solicitacao = get_object_or_404(Fuelrequests, id=id)
-
     else:
-        solicitacao = get_object_or_404(Fuelrequests.objects.filter(
-            usuario=request.user),
+        solicitacao = get_object_or_404(
+            Fuelrequests.objects.filter(usuario=request.user),
             id=id,
-            )
-        if solicitacao.status in ['A', 'N']:
-            raise Http404("Solicitações aprovadas ou não aprovadas não podem ser deletadas.")
+        )
+
+    if solicitacao.status != Fuelrequests.StatusChoices.PENDENTE:
+        messages.error(
+            request,
+            'Esta solicitação já foi processada e não pode mais ser excluída.'
+        )
+        return redirect('reembolsos:detalhes_reembolsos', pk=solicitacao.id)
 
     solicitacao.delete()
     messages.success(request, 'Solicitação deletada com sucesso.')
